@@ -1,0 +1,73 @@
+Racing Chars	4	Explore a race track avoiding crashes	70%	
+Strings and arrows	4	Print the number of arrows in a string	50%	
+Clean up the words	4	Print the words separated by spaces	45%	
+Find the highest score	4	Find the highest rate in the table	47%	
+Chardonnay or Cabernet	4	Guess a wine name.	67%	
+Time to eat	4	Sort timestamps in the right order.	38%	
+One zero, two zeros...	4	Count zeros in a binary system.	69%	
+Slang Flavor	3Failed	Add some slang to the text.	65%	
+String mask	3Failed	Change case letters by mask	44%	
+Multiples of a Number	2Partially	Multiples of a number greater than another number.	63%	
+Beautiful Strings	2Partially	Facebook Hacker Cup 2013 problem.	57%	
+Split The Number	2Partially	Evaluate the number according to the pattern	68%	
+Minimum Distance	2Partially	Find a point with the smallest sum of distances to every given point.	67%	
+Fizz Buzz	1Solved	A simple game involving divisibility tests.	38%	
+Prime Palindrome	1Solved	Biggest prime palindrome < 1000.	59%	
+Sum of Primes	1Solved	Sum of first 1000 primes.	50%	
+Reverse words	1Solved	Reversing an input sequence of words.	48%	
+Bit Positions	1Solved	Bits in position x,y are same or different.	68%	
+Lowercase	1Solved	Lowercase text	61%	
+Sum of Digits	1Solved	Sum of digits comprising a number	55%	
+Fibonacci Series	1Solved	Print out the nth fibonacci number	63%	
+Multiplication Tables	1Solved	Print out the grade school multiplication table upto 12*12	46%	
+Sum of Integers from File	1Solved	Print the sum of integers read from a file.	64%	
+Odd Numbers	1Solved	Print the odd numbers from 1 to 99.	66%	
+File Size	1Solved	Print the file size in bytes.	56%	
+Unique Elements	1Solved	Extract unique list from a sorted list of numbers.	61%	
+Set Intersection	1Solved	Print the intersection of two sets of numbers.	64%	
+Rightmost Char	1Solved	Print the position of the rightmost occurrence of a char.	69%	
+Happy Numbers	1Solved	Determine if a number is a happy number or not	67%	
+Self Describing Numbers	1Solved	Determine if a number is a self-describing number or not	71%	
+N Mod M	1Solved	Determine the modulus (without the modulus operator).	69%	
+Hex to Decimal	1Solved	Convert a hex number to it's decimal equivalent.	69%	
+Armstrong Numbers	1Solved	Determine if a number is an armstrong number.	65%	
+Query Board	1Solved	Set and get values from a matrix using tiny DSL	71%	
+Simple Sorting	1Solved	Sort several numbers	54%	
+Penultimate Word	1Solved	Find the next-to-last word	71%	
+Capitalize Words	1Solved	Capitalize words in a sentence	68%	
+Swap Case	1Solved	Swap case in a string	69%	
+Find a Writer	1Solved	Find a famous writer in a string	59%	
+Calculate Distance	1Solved	Calculate a distance between two points	60%	
+Even Numbers	1Solved	Determine if a number is even or not	65%	
+JSON menu IDs	1Solved	Calculate IDs in JSON menu	64%	
+Lowest Unique Number	1Solved	Find the lowest unique number in a set	66%	
+Word to Digit	1Solved	Substitute words to digits	59%	
+Roman Numerals	1Solved	Convert a cardinal number to a Roman numeral	70%	
+Shortest Repetition	1Solved	Find the shortest repetition in a string	72%	
+Longest Word	1Solved	Get the longest word in a sentence	71%	
+Swap Elements	1Solved	Swap elements in a list	66%	
+Multiply Lists	1Solved	Multiply elements in 2 lists	64%	
+Mixed Content	1Solved	Separate words with digits	65%	
+Morse Code	1Solved	Decode Morse code	63%	
+Hidden Digits	1Solved	Try to look behind the scenes	72%	
+Road Trip	1Solved	Do not be left without petrol	64%	
+Compressed Sequence	1Solved	Write a program that compresses a sequence of numbers	71%	
+The Major Element	1Solved	Find the major element in a sequence	71%	
+Working experience	1Solved	Retrieve an actual value	69%	
+Data Recovery	1Solved	Reconstruct a sentence using hints	46%	
+Lettercase Percentage Ratio 	1Solved	Find the percentage ratio.	57%	
+Juggling With Zeros	1Solved	Convert a zero-based number into integer.	66%	
+Age distribution	1Solved	Print out where the person is.	67%	
+Roller Coaster	1Solved	Turn the text into RoLlErCoAsTeR case.	52%	
+Nice angles	1Solved	Convert angle values to sexagesimal format.	68%	
+Big Digits	1Solved	Print out magnified digits using pseudographics.	68%	
+Delta Time	1Solved	Find the time difference.	64%	
+Read More	1Solved	Limit the length of the text.	72%	
+Without Repetitions	1Solved	Delete characters that are consistently repeated.	67%	
+Matrix Rotation	1Solved	Rotate a 2D matrix 90 degrees clockwise.	63%	
+Knight Moves	1Solved	Find positions for the next move of the knight.	63%	
+Details	1Solved	Determine how many cells will be shifted detail.	73%	
+Max Range Sum	1Solved	Determine max sum at the range.	66%	
+Compare Points	1Solved	Given two (x, y) points A and B, determine which cardinal direction B is from A.	71%	
+Swap Numbers	1Solved	Swap numbers surrounding a word	58%	
+Stepwise word	1Solved	Print the longest word in a stepwise manner	51%
