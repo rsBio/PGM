@@ -1,0 +1,36 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my @data = <DATA>;
+chomp @data;
+
+my $alien_msg;
+
+for (@data){
+    my ($cond, $msg) = split /: /;
+    $msg =~ s/^['"](.*)['"]$/$1/;
+    m/\b alien \b/x ?
+        ($alien_msg = $msg)
+        :
+        map { $_[$_] = $msg } eval join '..', $cond =~ m/\d+/g;
+}
+
+print map "$_\n",
+map {
+    ($_ < 0 or $_ > 100) ? $alien_msg : $_[$_]
+} split "\n"
+
+__DATA__
+If they're from 0 to 2 the child should be with parents print : 'Still in Mama's arms'
+If they're 3 or 4 and should be in preschool print : 'Preschool Maniac'
+If they're from 5 to 11 and should be in elementary school print : 'Elementary school'
+From 12 to 14: 'Middle school'
+From 15 to 18: 'High school'
+From 19 to 22: 'College'
+From 23 to 65: 'Working for the man'
+From 66 to 100: 'The Golden Years'
+If the age of the person less than 0 or more than 100 - it might be an alien - print: "This program is for humans"

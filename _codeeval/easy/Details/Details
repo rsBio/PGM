@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print map "$_\n",
+map {
+    (
+    sort {$a <=> $b}
+    map length,
+    map {
+        m/(?<=X)\.*(?=Y)/g
+    } split /,/
+    )[ 0 ]
+} split "\n"

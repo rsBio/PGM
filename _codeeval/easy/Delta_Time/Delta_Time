@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print map "$_\n",
+map {
+    my $time = abs eval join '-',
+    map {
+        my $i = 0;
+        eval join '+', map {
+            $_ * 60 ** ($i ++)
+        } reverse split ':'
+    } split;
+    
+    join ':', reverse map {
+        sprintf "%02s",
+        (
+        $time % 60,
+        $time /= 60,
+        )[0]
+    } 0 .. 2
+
+} split "\n"

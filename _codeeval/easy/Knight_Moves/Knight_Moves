@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my @moves;
+my @steps = qw(-2 -1 1 2);
+
+print map "$_\n",
+map {
+    y/a-h/1-8/;
+    
+    my @moves;
+    
+    for my $i (@steps){
+        for my $j (@steps){
+            (abs $i) + (abs $j) == 3 
+                and push @moves, join '', map "+$_",
+                    ( (split //)[0] + $i ),
+                    ( (split //)[1] + $j )
+        }
+    }
+
+    join ' ', sort map { 
+            y/+//d; 
+            s/\d/('a'..'h')[$&-1]/er 
+        } 
+        grep m/^(\+[1-8]){2}$/, @moves
+    
+} split "\n"

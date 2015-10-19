@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print map "$_\n",
+map {
+    my ($days, $money) = split /;/;
+    @_ = split ' ', $money;
+
+    my $sum;
+    my $until = @_ - 1;
+    $until > $days and $until = $days;
+    
+    for (0 .. (sort {$a <=> $b} $days - 1, @_ - 1)[0] ){
+        $sum += $_[$_];
+    }
+    
+    my $max = 0;
+    $max < $sum and $max = $sum;
+
+    for ($days .. @_ - 1){
+        $sum += $_[$_];
+        $sum -= $_[$_ - $days];
+        $max < $sum and $max = $sum;
+    }
+
+    $max
+} split "\n"

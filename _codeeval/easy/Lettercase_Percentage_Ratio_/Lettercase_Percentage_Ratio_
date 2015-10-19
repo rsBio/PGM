@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print map "$_\n",
+map {
+    my ($lc, $uc) = (0) x 2;
+
+    map { m/[a-z]/ ? $lc ++ : $uc ++ } m/\w/g;
+
+    sprintf "lowercase: %.2f uppercase: %.2f",
+        map {
+            100 * $_ / ($lc + $uc)
+        } $lc, $uc;
+} split "\n"
