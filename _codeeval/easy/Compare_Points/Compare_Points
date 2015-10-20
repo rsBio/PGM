@@ -9,7 +9,7 @@ print join "\n",
 map {
 	my ($x, $y, $X, $Y) = split;
 	$_ = q(SNWE);
-    my $re;
+	my $re;
 	$re = qw(WE E W)[$x - $X <=> 0];
 	s/$re//;
 	$re = qw(SN N S)[$y - $Y <=> 0];
