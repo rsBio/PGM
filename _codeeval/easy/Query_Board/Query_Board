@@ -1,0 +1,44 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my @i;
+for my $i (0 .. 255){
+	$i[ $i ] = [ (0) x 256 ];
+}
+
+for (split /\n/){
+	my (undef, $tgt, $val) = split;
+
+	if (/^Set/){
+		if (/Col/){
+			for (0 .. 255){
+				$i[ $_ ][ $tgt ] = $val;
+			}
+		}
+		elsif (/Row/){
+			for (0 .. 255){
+				$i[ $tgt ][ $_ ] = $val;
+			}
+		}
+	}
+	elsif (/^Query/){
+		my $sum = 0;
+		
+		if (/Col/){
+			for (0 .. 255){
+				$sum += $i[ $_ ][ $tgt ];
+			}
+		}
+		elsif (/Row/){
+			for (0 .. 255){
+				$sum += $i[ $tgt ][ $_ ];
+			}
+		}
+		print $sum . "\n"
+	}
+	
+}

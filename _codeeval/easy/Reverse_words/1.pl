@@ -1,0 +1,3 @@
+$\ = $/;
+$, = $";
+print reverse split while <>

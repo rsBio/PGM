@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+s/\n+/\n/g;
+
+print join "\n",
+map {
+	 eval "rindex " . join ',', map "'$_'", split /,/
+} split "\n";
+
+print "\n"

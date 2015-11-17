@@ -1,0 +1,31 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my $data;
+{ local $/ ; $data = <DATA> };
+
+my %numerals = map { reverse split } $data =~ m/\b\d \s+ \w+/xg;
+
+print join "\n",
+map {
+	join '', 
+	map $numerals{ $_ }, split /;/
+} split "\n";
+
+print "\n";
+
+__DATA__
+0 	zero (nought) 	10 	ten 	  	 
+1 	one 	11 	eleven 	  	 
+2 	two 	12 	twelve (a dozen) 	20 	twenty (a score)
+3 	three 	13 	thirteen 	30 	thirty
+4 	four 	14 	fourteen 	40 	forty (no "u")
+5 	five 	15 	fifteen (note "f", not "v") 	50 	fifty (note "f", not "v")
+6 	six 	16 	sixteen 	60 	sixty
+7 	seven 	17 	seventeen 	70 	seventy
+8 	eight 	18 	eighteen (only one "t") 	80 	eighty (only one "t")
+9 	nine 	19 	nineteen 	90 	ninety (note the "e")

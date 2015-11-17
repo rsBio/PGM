@@ -1,0 +1,23 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($elems, $swaps) = split /:/;
+	my @elems = split ' ', $elems;
+	map {
+		my @idxs = split /-/, join '', grep $_, split;
+		eval join '=', map "($_)",
+		(
+			(join ',', map "\$elems[ $_ ]", @idxs),
+			(join ',', map "\$elems[ $_ ]", reverse @idxs),
+		)
+	} split ', ', $swaps;
+	join ' ', @elems;
+} split "\n";
+
+print "\n"

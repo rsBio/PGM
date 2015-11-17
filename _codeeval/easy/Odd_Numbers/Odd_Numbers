@@ -1,0 +1,6 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+print join "\n", grep $_ & 1, 0 .. 100

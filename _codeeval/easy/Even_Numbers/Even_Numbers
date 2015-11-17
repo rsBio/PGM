@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+    1 - ($_ & 1)
+} split "\n";
+
+print "\n"

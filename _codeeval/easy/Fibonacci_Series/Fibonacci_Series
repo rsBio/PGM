@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use bigint;
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my @F = map 0 + $_, 0 .. 1;
+push @F, $F[-2] + $F[-1] for 1 .. 1000;
+
+print join "\n",
+map {
+	$F[ $_ ]
+} split "\n";
+
+print "\n"

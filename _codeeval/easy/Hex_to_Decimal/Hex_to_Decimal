@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+my $_0f = join '', 0 .. 9, 'a' .. 'f';
+
+print join "\n",
+map {
+	my $i = 0;
+	eval join '+',
+	map {
+		16 ** ($i ++) * index $_0f, $_
+	} reverse split //;
+} split "\n";
+
+print "\n"

@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	sqrt eval join '+', map { (eval) ** 2 }
+	(
+		( join '-', map "($_)", ( m/-?\d+/g )[ 0, 2 ] ),
+		( join '-', map "($_)", ( m/-?\d+/g )[ 1, 3 ] ),
+	)
+} split "\n";
+
+print "\n"

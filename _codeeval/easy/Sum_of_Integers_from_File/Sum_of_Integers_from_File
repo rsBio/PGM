@@ -1,0 +1,11 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+	eval join '+', split "\n";
+
+print "\n"

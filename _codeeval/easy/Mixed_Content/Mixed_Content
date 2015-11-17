@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	( join ',', sort { eval join '<=>', map 0 + m/\d/, $a, $b } split /,/ )
+	=~ s/(?<=\D) , (?=\d)/|/xr
+} split "\n";
+
+print "\n"

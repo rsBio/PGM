@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	y/a-j/0-9/r =~ s/\D//rg || 'NONE'
+} split "\n";
+
+print "\n"

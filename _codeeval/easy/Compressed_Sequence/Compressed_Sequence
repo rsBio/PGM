@@ -1,0 +1,13 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+    s/(\b\d+\b)(?: \1\b)*/ scalar(split ' ', $&) . ' ' . $1 /ger
+} split "\n";
+
+print "\n"

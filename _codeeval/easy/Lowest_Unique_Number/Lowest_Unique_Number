@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my $bulk = reverse join '', sort split;
+	$bulk =~ s/(\d)\1+//xg;
+	$bulk ?
+		do { 1 + index y/ //dr, chop $bulk }
+	:
+		0
+} split "\n";
+
+print "\n"

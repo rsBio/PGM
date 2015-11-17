@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($bulk, $idxs) = split /\|/;
+	join '', map {
+		substr $bulk, $_ -1, 1
+	} split ' ', $idxs
+} split "\n";
+
+print "\n"

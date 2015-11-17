@@ -1,0 +1,19 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my $start = 0;
+	join ',', 
+	map { ($_ - $start, $start = $_)[ 0 ] }
+	sort {$a <=> $b}
+	map {
+		(split /,/)[ -1 ]
+	} split /;/
+} split "\n";
+
+print "\n"

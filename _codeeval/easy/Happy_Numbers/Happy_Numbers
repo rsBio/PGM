@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my %h;
+	$h{ $_ } ++;
+	$h{ $_ = eval join '+', map $_ ** 2, split // } ++
+		while 2 > $h{ $_ };
+	0 + defined $h{ "1" };
+} split "\n";
+
+print "\n"
