@@ -1,0 +1,6 @@
+/[A-Z]\w*/ - atom
+/[&^|~]|->/ - operators
+by precedence: 
+~ - negation (unary)
+&, |, ^ - and, or, xor - from left to right
+-> - implies
