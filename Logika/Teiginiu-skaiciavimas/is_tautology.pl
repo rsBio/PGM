@@ -29,10 +29,11 @@ while(<>){
 		} split //, sprintf "%0${atoms}b", $i;
 		
 		$_ = $_vars;
-#%		print "<<$_>>\n";
+		print ">>$_<<\n";
 		
 		# regexes follows according precedence of logical ops
 		while( 0
+			|| ( s/\(( *$num *)\)/ $1 /g , 0 )
 			|| (not print "::$_\n") 
 			|| s/~( *)($num)/ ' '. $1 . ( 0 + ! $2 ) /e
 			|| s/($num)( *)([|&^])( *)($num)/

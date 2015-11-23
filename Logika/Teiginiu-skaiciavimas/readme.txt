@@ -1,3 +1,3 @@
 Programa pranesa, ar teiginys yra tautologija.
 
-Kol kas veikia teiginiam neturintiems skliausteliu.
+Veikia ir teiginiams turintiems skliausteliu.
