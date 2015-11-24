@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+    my %hash;
+	map $hash{ (lc) } ++, /[a-z]/ig;
+    my $cost = 26;
+    eval join '+', map $_ * $cost --, sort { $b <=> $a } values %hash;
+} split "\n";
+
+print "\n"
