@@ -1,0 +1,17 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $n = 1e4;
+my @n = 2 .. $n;
+for my $i (2 .. sqrt $n){
+	my @m;
+	for my $j (@n){
+		$j == $i || $j % $i and push @m, $j;
+	}
+	@n = @m;
+}
+print eval join '+', @n[0 .. 999];
+
+print "\n"
