@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($word, $mask) = split;
+	$mask = reverse $mask;
+	join '', 
+	map {
+		chop $mask ? uc : $_
+	} $word =~ m/./g;
+} split "\n";
+
+print "\n"

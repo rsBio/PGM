@@ -1,0 +1,29 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my @repl = map { chomp; s/^\s*//r } <DATA>;
+#%	print "[@repl]\n";
+
+{ local $/ ; $_ = <> };
+
+my $i = 0;
+my $j = 0;
+
+print join "\n",
+map {
+	s/[.!?]/ $j ++ % 2 ? $repl[ $i ++ % @repl ] : $& /egr
+} split "\n";
+
+print "\n"
+
+__DATA__
+    , yeah!
+    , this is crazy, I tell ya.
+    , can U believe this?
+    , eh?
+    , aw yea.
+    , yo.
+    ? No way!
+    . Awesome!

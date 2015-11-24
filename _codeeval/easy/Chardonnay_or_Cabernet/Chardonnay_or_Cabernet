@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($wines, $lett) = split '\|';
+	my @wines = split ' ', $wines;
+	my @lett = $lett =~ m/\w/g;
+	my @ans;
+	
+	for my $wine (@wines){
+		my $save_wine = $wine;
+		my $fail;
+		for my $remove (@lett){
+			$wine =~ s/$remove// or $fail ++
+		}
+		push @ans, $save_wine if not $fail;
+	}
+
+	@ans ? "@ans" : 'False'
+} split "\n";
+
+print "\n"
