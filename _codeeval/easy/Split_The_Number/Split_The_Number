@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($num, $pat) = split;
+	$pat =~ s/\w+/
+				join '', map "($_)", '\\d' . join '',
+				map "{$_}", length $&
+			/eg;
+	my $sign;
+	$pat =~ s/[-+]// and $sign = $&;
+	$pat = qr/$pat/;
+	$num =~ $pat;
+	eval join $sign, map s/^0+(?!$)//r, "$1", "$2"
+} split "\n";
+
+print "\n"

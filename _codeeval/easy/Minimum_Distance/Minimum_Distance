@@ -1,0 +1,28 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my ($n, @loc) = split;
+	my @street = (0) x (1 + 1e4);
+	my $sum = eval join '+', @loc ? @loc : 0;
+#%	print $sum, "\n";
+	map $street[ $_ ] ++, @loc;
+#%	print "[@street]\n";
+	my @final;
+	my $current = $sum;
+	my $left = 0;
+	for my $i (0 .. 1e4){
+		$final[ $i ] = $current;
+		$left += $street[ $i ];
+		$current -= ($n - $left);
+		$current += ($left);
+	}
+	@final ? (sort {$a <=> $b} @final)[ 0 ] : 0;
+} split "\n";
+
+print "\n"
