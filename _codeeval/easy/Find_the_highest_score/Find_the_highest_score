@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	my @max;
+	map {
+		my $i = 0;
+		map {
+			defined $max[ $i ] or $max[ $i ] = -~0;
+			$max[ $i ] = $_ if $max[ $i ] < $_;
+			$i ++
+		} split;
+	} split '\|';
+	"@max"
+} split "\n";
+
+print "\n"

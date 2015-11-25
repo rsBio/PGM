@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+{ local $/ ; $_ = <> };
+
+print join "\n",
+map {
+	join ' ', split ' ', join ' ',
+	map lc, split m/[^a-z]+/i;
+} split "\n";
+
+print "\n"
