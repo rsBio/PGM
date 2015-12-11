@@ -1,0 +1,4 @@
+'validate.pl' - validuoja ar sudoko eilutės, 
+stulpeliai ir blokeliai turi visus skirtingus skaičius.
+'hide.pl' - ima dalį sudoko langelių ir juos pakeičia nuliais,
+galima nurodyti dalį procentais, arba įvedus tikslų skaičių.
