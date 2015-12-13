@@ -8,6 +8,8 @@ while(<>){
 	my ($first_line, @lines) = split /\n/;
 	my ($len, $n, $m) = split ' ', $first_line;
 	
+    print "len != n * m !!!\n" if $len != $n * $m;
+    
 	my @matrix = map { [split] } @lines;
 	my @sequence = (1 .. $len);
 	my @nums;
