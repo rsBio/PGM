@@ -1,0 +1,1 @@
+cat con01.data | grep '\w' | ./tsv_to_ssv.pl | ./transpose_ssv.pl | ./add_xy.pl | ./Morisita_palyginti.pl
