@@ -1,0 +1,1 @@
+cat br_02.data br_03.data | grep '\w' | ./dvi_palyginti.pl
