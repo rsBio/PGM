@@ -1,0 +1,11 @@
+ctrl+A
+
+perl -i -ne 'print if /6, / || /^(Med|Mol|Gel|Gr)/' ta3
+
+perl -i -pe 's/.*?, //' ta3
+
+perl -i -pe 's/.*?(\d\d:\d\d:\d\d|\d+)$/$1/g' ta3
+
+perl -0777 -i -pe 's/\n(\d{3})/ $1/g' ta3
+
+
