@@ -1,0 +1,12 @@
+pngtopnm
+ppmtopgm
+pnmcut 686 322 205 205
+
+pamfile: PGM raw, 205 by 205  maxval 255
+
+pgmhist | grep '^0'
+
+pgmhist c01.pgm | grep '^0' | perl -ne 'print ~~(split)[1], $/' > c01.black
+
+
+pnmcut 500 136 579 579  b01_.pgm > aa
