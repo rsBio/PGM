@@ -39,8 +39,8 @@ for (@ARGV){
 	my $b = () = $data =~ /1/g;
 	my $w = () = $data =~ /0/g;
 
-	defined $bproc and $bnum = int $rsl * $bproc / 100;
-	defined $wproc and $wnum = int $rsl * $wproc / 100;
+	defined $bproc and $bnum = int $w * $bproc / 100;
+	defined $wproc and $wnum = int $b * $wproc / 100;
 	
 	$bnum > $w and die "$0: bnum[$bnum] > w[$w]: $!\n";
 	$wnum > $b and die "$0: wnum[$wnum] > b[$b]: $!\n";
