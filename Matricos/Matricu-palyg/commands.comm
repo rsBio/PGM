@@ -2,4 +2,5 @@ grep '\w' br_03.data | ./remove_rc.pl -top1 -bot2 -right0 -left0 -ssv -tossv -
 
 grep '\w' br_03.data | ./is_matrix.pl -ssv -
 
+grep '\w' con01.data | ./remove_rc.pl -top1 -left1 -right3 -tossv - | ./transpose_ssv.pl | ./add_xy.pl | ./Morisita_palyginti.pl
 
