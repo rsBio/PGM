@@ -17,6 +17,8 @@ my $printf = '%f';
 my $rr = 0;
 my $hist = 0;
 my $visual = 0;
+my $longest = 0;
+my $trapping_time = 0; # average
 
 for (@opt){
 	/-minl(\d+)/ and do {
@@ -31,6 +33,12 @@ for (@opt){
 	/-hist(v)?/ and do {
 		$hist = 1;
 		defined $1 and $visual = 1;
+	};
+	/-longest/ and do {
+		$longest = 1;
+	};
+	/-tt|-avg/ and do {
+		$trapping_time = 1;
 	};
 	/-d/ and $debug = 1;
 }
@@ -50,11 +58,21 @@ for (@ARGV){
 
 	my %lenghts;
 	my $sum = 0;
+	my @lines;
 	map { my $len = length(); $sum += $len; $lenghts{ $len } ++ } 
-		$data =~ /1{$minl,}/g;
+		@lines = $data =~ /1{$minl,}/g;
 	
 	printf "${printf}\n", $sum / $black;
-
+	
+	if( $longest ){
+		my $maxl = (sort {$b <=> $a} keys %lenghts)[ 0 ] || 0;
+		print "Longest: $maxl\n";
+	}
+	
+	if( $trapping_time ){
+		printf "Trapping time (avg): ${printf}\n", $sum / @lines;
+	}
+	
 	if( $hist ){
 		my $maxl = (sort {$b <=> $a} keys %lenghts)[ 0 ] || 0;
 		printf "$_ : %s\n", map { $visual ? '*' x $_ : (sprintf "%3d", $_) } 
