@@ -12,11 +12,11 @@ for (@ARGV){
 	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
 }
 
-my $split = '\t';
+my $split = "\t";
 
 for (@opt){
 	/-tsv/ and do {
-		$split = '\t';
+		$split = "\t";
 	};
 	/-csv/ and do {
 		$split = ',';
@@ -35,7 +35,7 @@ for (@opt){
 for (@ARGV){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	my @lengths = map { 0 + split /$split/ } (defined $in ? <$in> : <STDIN>);
+	my @lengths = map { 0 + split /$split/ } grep m/./, (defined $in ? <$in> : <STDIN>);
     
     my $rows = @lengths;
     my $ok = @lengths == grep { $lengths[0] == $_ } @lengths;

@@ -67,7 +67,7 @@ for (@opt){
 for (@ARGV){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	my @data = map { chomp; [ split /$split/ ] } (defined $in ? <$in> : <STDIN>);
+	my @data = map { chomp; [ split /$split/ ] } grep m/./, (defined $in ? <$in> : <STDIN>);
 	splice @data, 0, $top;
 	splice @data, -$bottom if $bottom;
 	splice @{$_}, 0, $left for @data;
