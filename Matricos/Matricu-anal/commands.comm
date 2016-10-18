@@ -1,0 +1,12 @@
+./determinism.pl -ratio -histv -avg -longest -entr -minl3 m06.in
+
+./laminarity.pl -f.2f -minl3 -hist -longest -tt m06.in
+
+./recurrence_rate.pl -f.2f m06.in
+
+./gen_mono.pl -p1 -b -x10 -y15
+./gen_mono.pl -p2 -xy15 -f200
+
+./put_dots.pl -w80% -d m01.in
+
+
