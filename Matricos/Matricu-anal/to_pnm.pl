@@ -1,0 +1,94 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @ARGV_2;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+}
+
+my $split = "\t";
+my $join = " ";
+my $to_pbm = 0;
+my $to_pgm = 0;
+my $maxval = 0;
+my $treshold = 0;
+
+for (@opt){
+	/-topbm/ and do {
+		$to_pbm = 1;
+	};
+	/-topgm/ and do {
+		$to_pgm = 1;
+	};
+	/-maxval([\d.]+)/ and do {
+		$maxval = $1;
+	};
+	/-treshold([\d.]+)/ and do {
+		$treshold = $1;
+	};
+	/-tsv/ and do {
+		$split = '\t';
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-totsv/ and do {
+		$join = '\t';
+	};
+	/-tocsv/ and do {
+		$join = ',';
+	};
+	/-tocssv/ and do {
+		$join = ', ';
+	};
+	/-tossv/ and do {
+		$join = ' ';
+	};
+	/-nosep/ and do {
+		$join = '';
+	};
+	/-d/ and $debug = 1;
+}
+
+@ARGV = @ARGV_2;
+
+for (@ARGV){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split /$split/ ] } grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	$treshold *= $maxval;
+
+	if( $to_pbm ){
+		print "P1\n";
+		print 0 + @{ $data[0] }, ' ', 0 + @data, "\n";
+	}
+	if( $to_pgm ){
+		print "P2\n";
+		print 0 + @{ $data[0] }, ' ', 0 + @data, "\n";
+		print 255, "\n";
+	}
+	
+	for (@data){
+		print join "$join",
+			map {
+				$to_pbm ?
+					( $_ > $treshold ? 1 : 0 )
+				:
+					( 255 - int 255 * $_ / $maxval )
+			} @{$_};
+		print "\n";
+	}
+}
