@@ -1,0 +1,5 @@
+grep '\w' br_03.data | ./remove_rc.pl -top1 -bot2 -right0 -left0 -ssv -tossv -
+
+grep '\w' br_03.data | ./is_matrix.pl -ssv -
+
+
