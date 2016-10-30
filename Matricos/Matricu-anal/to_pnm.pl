@@ -17,6 +17,7 @@ my $join = " ";
 my $to_pbm = 0;
 my $to_pgm = 0;
 my $maxval = 0;
+my $maxproc;
 my $findmax = 0;
 my $treshold = 0;
 
@@ -35,6 +36,9 @@ for (@opt){
 	};
 	/-treshold([\d.]+)/ and do {
 		$treshold = $1;
+	};
+	/-max([\d.]+)%/ and do {
+		$maxproc = $1;
 	};
 	/-tsv/ and do {
 		$split = '\t';
@@ -87,6 +91,11 @@ for (@ARGV){
 		print 255, "\n";
 	}
 	
+	if( defined $maxproc ){
+		my @sorted = (sort {$b <=> $a} map @{$_}, @data);
+		$treshold = $sorted[ @sorted * 0.01 * $maxproc ];
+	}
+
 	for (@data){
 		print join "$join",
 			map {
