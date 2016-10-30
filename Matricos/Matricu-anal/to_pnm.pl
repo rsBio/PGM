@@ -17,6 +17,7 @@ my $join = " ";
 my $to_pbm = 0;
 my $to_pgm = 0;
 my $maxval = 0;
+my $findmax = 0;
 my $treshold = 0;
 
 for (@opt){
@@ -25,6 +26,9 @@ for (@opt){
 	};
 	/-topgm/ and do {
 		$to_pgm = 1;
+	};
+	/-findmax/ and do {
+		$findmax = 1;
 	};
 	/-maxval([\d.]+)/ and do {
 		$maxval = $1;
@@ -69,8 +73,10 @@ for (@ARGV){
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
 	my @data = map { chomp; [ split /$split/ ] } grep m/./, (defined $in ? <$in> : <STDIN>);
 	
+	$findmax and $maxval = (sort {$b <=> $a} map @{$_}, @data)[ 0 ];
+	
 	$treshold *= $maxval;
-
+	
 	if( $to_pbm ){
 		print "P1\n";
 		print 0 + @{ $data[0] }, ' ', 0 + @data, "\n";
