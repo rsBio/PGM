@@ -13,7 +13,10 @@ for (@ARGV){
 	
 	for (<$in>){
 		s/\s+//;
-		m/([^-]*)-.*?(\d+:\d+\.\d+)/ or next;
+		s/ -//;
+		s/http\S*\s//;
+		m/^(.+)\s+(\d+:\d+\.\d+)/ or next;
+#%		print "[$1|$2]\n";
 		my $name = $1;
 		my $time = $2;
 		$name =~ s/\s+$//;
