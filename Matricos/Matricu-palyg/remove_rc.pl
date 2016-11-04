@@ -36,7 +36,7 @@ for (@opt){
 		$right = $1;
 	};
 	/-tsv/ and do {
-		$split = '\t';
+		$split = "\t";
 	};
 	/-csv/ and do {
 		$split = ',';
@@ -48,7 +48,7 @@ for (@opt){
 		$split = ' ';
 	};
 	/-totsv/ and do {
-		$join = '\t';
+		$join = "\t";
 	};
 	/-tocsv/ and do {
 		$join = ',';
