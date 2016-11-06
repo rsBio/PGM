@@ -12,4 +12,6 @@
 ./to_pnm.pl -csv -topbm -maxval255 -treshold0.3 con-pal.out > pal.pbm
 ./to_pnm.pl -csv -topbm -maxval1 -treshold0.9 con-Mor.out
 
+./traverse_bisection.pl -nosep -pbm -topgm m01.in
+
 
