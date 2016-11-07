@@ -14,4 +14,6 @@
 
 ./traverse_bisection.pl -nosep -pbm -topgm m01.in
 
+./traverse_median.pl -pbm -nosep -topgm -rowstep5 -colstep3 m07.in > as53
+
 
