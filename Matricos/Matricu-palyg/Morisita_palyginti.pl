@@ -14,8 +14,12 @@ for (@ARGV){
 
 my $split = " ";
 my $join = ",";
+my $Horn = 0;
 
 for (@opt){
+	/-horn/ and do {
+		$Horn = 1;
+	};
 	/-tsv/ and do {
 		$split = "\t";
 	};
@@ -74,8 +78,8 @@ for (@ARGV){
 	for my $i (1 .. $gylis){
 		my $sum;
 		for my $j (1 .. $dim){
-		    $sum += ( $dim_gylis[ $j-1 ][ $i-1 ] ** 2 - $dim_gylis[ $j-1 ][ $i-1 ] ) /
-					( $Xi[ $i-1 ]                ** 2 - $Xi[ $i-1 ] );
+		    $sum += ( $dim_gylis[ $j-1 ][ $i-1 ] * ( $dim_gylis[ $j-1 ][ $i-1 ] - $Horn ) ) /
+					( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) );
 		}
 	#%	printf "    lambda_i [%d]: %s\n", $i, $sum;
 		push @lambda_i, $sum;
