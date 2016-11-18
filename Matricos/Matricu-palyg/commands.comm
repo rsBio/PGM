@@ -1,6 +1,18 @@
+cat br_02.data br_03.data | grep '\w' | ./dvi_palyginti.pl
+
 grep '\w' br_03.data | ./remove_rc.pl -top1 -bot2 -right0 -left0 -ssv -tossv -
 
 grep '\w' br_03.data | ./is_matrix.pl -ssv -
 
+grep '\w' con01.data | ./remove_rc.pl -top1 -left2 -right3 -tossv - | ./transpose_ssv.pl | ./add_xy.pl | ./Morisita_palyginti.pl - > Mor-h0-con-lstrip1-rstrip3.mat
+
+./change_separator.pl -csv mor2 > mor3
+
+./transpose.pl -tonosep br_03.data
+
+
+
+--OLD--
 grep '\w' con01.data | ./remove_rc.pl -top1 -left1 -right3 -tossv - | ./transpose_ssv.pl | ./add_xy.pl | ./Morisita_palyginti.pl
+
 
