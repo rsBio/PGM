@@ -1,0 +1,5 @@
+convert 007.png -alpha set -channel A -evaluate set 50% c007.png
+
+perl -e 'printf "convert d%02d.png -alpha set -channel A -evaluate set 50%% bd%02d.png ; ", $_, $_ for 1 .. 21'
+
+./coords.pl -d -H-375,-330 -p:2,3,4,5 SC-map.csv | less -S
