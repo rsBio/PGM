@@ -52,6 +52,7 @@ for (@ARGV){
 	my @rsl = split ' ', <$in>;
 	my $rsl = $rsl[0] * $rsl[1];
 	my $data = do { local $/ ; <$in> };
+	$data =~ s/ //g;
 	my $black = () = $data =~ /1/g;
 	
 	$rr and do { printf "${printf}\n", $black / $rsl ; next };
