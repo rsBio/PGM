@@ -12,26 +12,37 @@ for (@ARGV){
 	/^-/ ? (push @opt, $_) : (push @ARGV_2, $_);
 }
 
-my $pict = "frog-10.pgm";
 my( $V, $H ) = ( 30, 15 );
 my @frogs = '01' .. '11';
 my $bg = '.';
+my $frog = 'x';
 my $mark = 'm';
 my $explo = '?';
 my $speed = 5;
-my $subtracted = 0;
-my $added = 0;
 my $add_freq = 3;
+my $rotated = 0;
+my $added = 0;
 my @axisH;
 my @axisV;
 my %hitH;
 my %hitV;
-my $bnum = 0;
-my $bproc;
-my $wnum = 0;
-my $wproc;
 
 for (@opt){
+	/-bg=(.)$/ and do {
+		$bg = $1;
+	};
+	/-explo=(\S)$/ and do {
+		$explo = $1;
+	};
+	/-mark=(\S)$/ and do {
+		$mark = $1;
+	};
+	/-V(\d+)/ and do {
+		$V = $1;
+	};
+	/-H(\d+)/ and do {
+		$H = $1;
+	};
 	/-speed(\d+)/ and do {
 		$speed = $1;
 	};
@@ -55,7 +66,7 @@ for my $frog_nr (@frogs){
 	my( $maxval ) = split ' ', <$in>;
 	my @lines = map { s/\s//gr } <$in>;
 	my $re = join '.' x ( $V - $frogV + 0 ) . ( $debug ? "\n" : ''), 
-		map { s/0/./gr =~ s/[^.]/x/gr } @lines;
+		map { s/0/./gr =~ s/[^.]/$frog/gr } @lines;
 	
 	$debug and print "$re\n";
 	$debug and $re =~ s/\n//g;
@@ -97,11 +108,11 @@ while( <> ){
 	
 	# rotatinam pagal laika:
 	
-	for my $times ( 1 .. ( $nowT - $initT ) / $speed - $subtracted ){
+	for my $times ( 1 .. ( $nowT - $initT ) / $speed - $rotated ){
 		my $last = pop @A;
-		$last =~ /x/ and $gameover = 1;
+		$last =~ /$frog/ and $gameover = 1;
 		unshift @A, $bg x $V;
-		$subtracted ++;
+		$rotated ++;
 		}
 	
 	if( $gameover ){
@@ -145,14 +156,14 @@ while( <> ){
 	$B++ for 1 .. 1e7;
 	
 	my $qm = quotemeta $explo;
-	s/${qm}/./g for @A;
+	s/${qm}/$bg/g for @A;
 	
 	# ar gali tilpti nauja varle ?? :
 	
 	START: 
 	
 	my $inserted = 0;
-	if( $subtracted - $added * $add_freq <= 0 ){ $inserted = 1; }
+	if( $rotated - $added * $add_freq <= 0 ){ $inserted = 1; }
 	
 	my $try = 0;
 	while( ! $inserted ){
@@ -172,7 +183,7 @@ while( <> ){
 		
 		my $re = $frog{ $try_frog }{ 're' };
 		my $re2 = $re;
-		$re2 =~ s/x/[^x]/g;
+		$re2 =~ s/$frog/[^$frog]/g;
 		$debug and print "\n$re2\n";
 		
 		if( $A =~ /${mark}\K$re2/s ){
