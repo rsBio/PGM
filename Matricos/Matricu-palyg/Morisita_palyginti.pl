@@ -78,6 +78,7 @@ for (@ARGV){
 	for my $i (1 .. $gylis){
 		my $sum;
 		for my $j (1 .. $dim){
+			( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) ) or next;
 		    $sum += ( $dim_gylis[ $j-1 ][ $i-1 ] * ( $dim_gylis[ $j-1 ][ $i-1 ] - $Horn ) ) /
 					( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) );
 		}
@@ -96,8 +97,13 @@ for (@ARGV){
 		    for my $r (@dim_gylis){
 		        $sum += $r->[ $i-1 ] * $r->[ $j-1 ];
 		    }
-		    push @line, 2 * $sum / 
-		        ( ($lambda_i[ $i-1 ] + $lambda_i[ $j-1 ]) * $Xi[ $i-1 ] * $Xi[ $j-1 ] );
+		    push @line, 
+				$Xi[ $i-1 ] == 0 || $Xi[ $j-1 ] == 0 ?
+					0
+				:
+					2 * $sum 
+					/ ( ($lambda_i[ $i-1 ] + $lambda_i[ $j-1 ]) 
+					* $Xi[ $i-1 ] * $Xi[ $j-1 ] );
 		}
 		push @matrix, [ @line ];
 	}
