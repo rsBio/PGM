@@ -16,7 +16,7 @@ my $split = " ";
 my $join = " ";
 my $pbm = 0;
 my $to_pbm = 0;
-my $to_pgm = 0;
+my $whole_CEN = 0;
 my $power = 2;
 my $print_RR = 0;
 my $print_ratios = 0;
@@ -28,6 +28,9 @@ for (@opt){
 	/-power(\d+)/ and do {
 		$power = $1;
 	};
+	/-whole/ and do {
+		$whole_CEN = 1;
+	};
 	/-rr/i and do {
 		$print_RR = 1;
 	};
@@ -36,9 +39,6 @@ for (@opt){
 	};
 	/-topbm/ and do {
 		$to_pbm = 1;
-	};
-	/-topgm/ and do {
-		$to_pgm = 1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -70,7 +70,7 @@ for (@opt){
 	/-tonosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -92,37 +92,62 @@ for (@ARGV){
 
 	@data = map { [ split /$split/ ] } @data;
 	
-	my @CEN;
-	my @RR;
-	my @ratios;
+	if( ! $whole_CEN ){
 	
-	for my $col ( 0 .. $cols - 1 ){
+		my @CEN;
+		my @RR;
+		my @ratios;
 		
-		my $sum = 0;
-		my $RR = 0;
-		
-		for my $row ( 0 .. $rows - 1 ){
+		for my $col ( 0 .. $cols - 1 ){
 			
-			next if not $data[ $row ][ $col ];
-			$RR ++;
+			my $sum = 0;
+			my $RR = 0;
 			
-			$sum += abs( $row - $col ) ** $power;
+			for my $row ( 0 .. $rows - 1 ){
+				
+				next if not $data[ $row ][ $col ];
+				$RR ++;
+				
+				$sum += abs( $row - $col ) ** $power;
+				
+				}
 			
+			my $CEN = sprintf "%.4f", $RR > 1 ? $RR / $rows / ( $sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
+		#!	my $CEN = sprintf "%.4f", $sum > 0 ? $RR / $sum : 0;
+			push @CEN, $CEN;
+			push @RR, $RR;
+			push @ratios, $RR ? $CEN / $RR : 0;
 			}
 		
-		my $CEN = sprintf "%.4f", $RR > 1 ? $RR / $rows / ( $sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
-	#!	my $CEN = sprintf "%.4f", $sum > 0 ? $RR / $sum : 0;
-		push @CEN, $CEN;
-		push @RR, $RR;
-		push @ratios, $RR ? $CEN / $RR : 0;
-		}
+		
+		print do { local $" = $join; "@CEN\n" }; 
+		if( $print_RR ){
+			print do { local $" = $join; "@RR\n" }; 
+			}
+		if( $print_ratios ){
+			print do { local $" = $join; "@ratios\n" }; 
+			}
 	
+	} else { 
+		
+		my $RR = map { grep $_, @{$_} } @data;
+		$debug and print "RR: ", $RR, "\n";
+		
+		my $sum = 0;
+		
+		for my $col ( 0 .. $cols - 1 ){
+			for my $row ( 0 .. $rows - 1 ){
+				
+				next if not $data[ $row ][ $col ];
+				
+				$sum += abs( $row - $col ) ** $power;
+				
+				}
+			}
+		
+		my $CEN = sprintf "%.5f", $RR > 1 ? $RR / $rows / $cols / ( $sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
+		
+		print $CEN, "\n";
+	}
 	
-	print do { local $" = $join; "@CEN\n" }; 
-	if( $print_RR ){
-		print do { local $" = $join; "@RR\n" }; 
-		}
-	if( $print_ratios ){
-		print do { local $" = $join; "@ratios\n" }; 
-		}
 }
