@@ -18,7 +18,7 @@ my $pbm = 0;
 my $to_pbm = 0;
 my $whole_CEN = 0;
 my $power = 2;
-my $print_RR = 0;
+my $print_RRc = 0;
 my $print_ratios = 0;
 
 for (@opt){
@@ -31,8 +31,8 @@ for (@opt){
 	/-whole/ and do {
 		$whole_CEN = 1;
 	};
-	/-rr/i and do {
-		$print_RR = 1;
+	/-rrc/i and do {
+		$print_RRc = 1;
 	};
 	/-ratios/ and do {
 		$print_ratios = 1;
@@ -95,34 +95,34 @@ for (@ARGV){
 	if( ! $whole_CEN ){
 	
 		my @CEN;
-		my @RR;
+		my @RRc;
 		my @ratios;
 		
 		for my $col ( 0 .. $cols - 1 ){
 			
 			my $sum = 0;
-			my $RR = 0;
+			my $RRc = 0;
 			
 			for my $row ( 0 .. $rows - 1 ){
 				
 				next if not $data[ $row ][ $col ];
-				$RR ++;
+				$RRc ++;
 				
 				$sum += abs( $row - $col ) ** $power;
 				
 				}
 			
-			my $CEN = sprintf "%.4f", $RR > 1 ? $RR / $rows / ( $sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
-		#!	my $CEN = sprintf "%.4f", $sum > 0 ? $RR / $sum : 0;
+			my $CEN = sprintf "%.4f", $RRc > 1 ? $RRc / $rows / ( $sum / ( $RRc - 1 ) ) ** (1 / $power) : 0;
+		#!	my $CEN = sprintf "%.4f", $sum > 0 ? $RRc / $sum : 0;
 			push @CEN, $CEN;
-			push @RR, $RR;
-			push @ratios, $RR ? $CEN / $RR : 0;
+			push @RRc, $RRc;
+			push @ratios, $RRc ? $CEN / $RRc : 0;
 			}
 		
 		
 		print do { local $" = $join; "@CEN\n" }; 
-		if( $print_RR ){
-			print do { local $" = $join; "@RR\n" }; 
+		if( $print_RRc ){
+			print do { local $" = $join; "@RRc\n" }; 
 			}
 		if( $print_ratios ){
 			print do { local $" = $join; "@ratios\n" }; 
@@ -133,19 +133,27 @@ for (@ARGV){
 		my $RR = map { grep $_, @{$_} } @data;
 		$debug and print "RR: ", $RR, "\n";
 		
-		my $sum = 0;
+		my $sum_sum = 0;
 		
 		for my $col ( 0 .. $cols - 1 ){
+			
+			my $sum = 0;
+			my $RRc = 0;
+			
 			for my $row ( 0 .. $rows - 1 ){
 				
 				next if not $data[ $row ][ $col ];
 				
+				$RRc ++;
 				$sum += abs( $row - $col ) ** $power;
 				
 				}
+			
+			$sum_sum += $RRc > 1 ? $sum : 0; 
+			
 			}
 		
-		my $CEN = sprintf "%.5f", $RR > 1 ? $RR / $rows / $cols / ( $sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
+		my $CEN = sprintf "%.5f", $RR > 1 ? $RR / $rows / $cols / ( $sum_sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
 		
 		print $CEN, "\n";
 	}
