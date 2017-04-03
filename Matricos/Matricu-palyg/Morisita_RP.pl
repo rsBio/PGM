@@ -5,11 +5,11 @@ use warnings;
 
 my $debug = 0;
 
-my @ARGV_2;
+my @FILES;
 my @opt;
 
 for (@ARGV){
-	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
 }
 
 my $split = " ";
@@ -17,8 +17,11 @@ my $join = ",";
 my $Horn = 0;
 
 for (@opt){
-	/-horn/ and do {
+	/-horn/i and do {
 		$Horn = 1;
+	};
+	/-F(\S+)/ and do {
+		$split = $1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -44,57 +47,60 @@ for (@opt){
 	/-tossv/ and do {
 		$join = ' ';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
-@ARGV = @ARGV_2;
-
-for (@ARGV){
+for (@FILES){
 	my $in;
-	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	my @data = map { chomp; [ split /$split/ ] } grep m/./, (defined $in ? <$in> : <STDIN>);
+	/^-$/ or open $in, '<', $_ or die "$0: can't open $_\n";
+	my @data = map { chomp; [ split /$split/ ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
 
-	my( $gylis, $dim ) = @{ shift @data };
-	$gylis != @{ $data[0] } and 
-		die "$0: gylis ($gylis) != num of columns. Maybe incorrect split?\n";
+	2 != @{ $data[0] } and 
+		die "$0: First line of input must contain " . 
+		"number of columns and number of rows.\n";
 	
-	my @dim_gylis = @data;
-
-	$debug and print "@{$_}\n" for @dim_gylis;
+	my( $cols, $rows ) = @{ shift @data };
+	$cols != @{ $data[0] } and 
+		die "$0: cols ($cols) != number of columns. " . 
+		"Maybe incorrect split separator?\n";
+	
+	$debug and print "@{$_}\n" for @data;
 
 	my @Xi;
 
-	for my $i (1 .. $gylis){
+	for my $i (1 .. $cols){
 		my $sum;
-		for my $j (1 .. $dim){
-		    $sum += $dim_gylis[ $j-1 ][ $i-1 ];
-		#%    print "  $i $j: $sum";
+		for my $j (1 .. $rows){
+		    $sum += $data[ $j-1 ][ $i-1 ];
+			$debug and print "  $i $j: $sum";
 		}
 		push @Xi, $sum;
 	}
 
 	my @lambda_i;
 
-	for my $i (1 .. $gylis){
-		my $sum;
-		for my $j (1 .. $dim){
+	for my $i (1 .. $cols){
+		my $sum = 0;
+		for my $j (1 .. $rows){
 			( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) ) or next;
-		    $sum += ( $dim_gylis[ $j-1 ][ $i-1 ] * ( $dim_gylis[ $j-1 ][ $i-1 ] - $Horn ) ) /
+		    $sum += ( $data[ $j-1 ][ $i-1 ] * 
+					( $data[ $j-1 ][ $i-1 ] - $Horn ) ) /
 					( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) );
 		}
-	#%	printf "    lambda_i [%d]: %s\n", $i, $sum;
+		$debug and printf "    lambda_i [%d]: %s\n", $i, $sum;
 		push @lambda_i, $sum;
 	}
 
-	#%  print "@lambda_i";
+	$debug and print "\@lambda_i: @lambda_i\n";
 
 	my @matrix;
 
-	for my $i (1 .. $gylis){
+	for my $i (1 .. $cols){
 		my @line;
-		for my $j (1 .. $gylis){
+		for my $j (1 .. $cols){
 		    my $sum;
-		    for my $r (@dim_gylis){
+		    for my $r (@data){
 		        $sum += $r->[ $i-1 ] * $r->[ $j-1 ];
 		    }
 		    push @line, 
@@ -103,7 +109,7 @@ for (@ARGV){
 				:
 					2 * $sum 
 					/ ( ($lambda_i[ $i-1 ] + $lambda_i[ $j-1 ]) 
-					* $Xi[ $i-1 ] * $Xi[ $j-1 ] );
+						* $Xi[ $i-1 ] * $Xi[ $j-1 ] );
 		}
 		push @matrix, [ @line ];
 	}
