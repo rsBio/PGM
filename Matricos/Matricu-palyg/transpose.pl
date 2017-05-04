@@ -14,8 +14,12 @@ for (@ARGV){
 
 my $split = " ";
 my $join = " ";
+my $pbm = 0;
 
 for (@opt){
+	/-pbm/ and do {
+		$pbm = 1;
+	};
 	/-tsv/ and do {
 		$split = "\t";
 	};
@@ -46,7 +50,7 @@ for (@opt){
 	/-tonosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -56,15 +60,25 @@ for (@ARGV){
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
 	
 	my @data;
+	my $i = 0;
+	my @pbm_header;
 	
 	for (defined $in ? <$in> : <STDIN>){
-		my $i = 0;
+		
+		if( $pbm and $i ++ <= 1 ){
+			push @pbm_header, $_;
+			next;
+			}
+			
 		chomp;
+		my $j = 0;
+		
 		for ( split /$split/ ){
-			push @{$data[ $i++ ]}, $_;
+			push @{$data[ $j++ ]}, $_;
 		}		
 	}
 
+	print for @pbm_header;
 	do { local $\ = $/; print join $join, @{$_} } for @data;
 }
 
