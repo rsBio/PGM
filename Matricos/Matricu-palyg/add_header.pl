@@ -48,7 +48,7 @@ for (@ARGV){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
 	
-	my @data = map { [ split ] } (defined $in ? <$in> : <STDIN>);
+	my @data = map { chomp; [ split $split ] } (defined $in ? <$in> : <STDIN>);
 	
 	if( $pbm ){
 		print "P1\n";
