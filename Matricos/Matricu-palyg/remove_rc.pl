@@ -17,10 +17,8 @@ my $bottom = 0;
 my $left = 0;
 my $right = 0;
 
-#!	my ($tsv, $csv, $cssv, $ssv) = (1, 0, 0, 0);
-#!	my ($totsv, $tocsv, $tocssv, $tossv) = (1, 0, 0, 0);
-my $split = "\t";
-my $join = "\t";
+my $split = " ";
+my $join = " ";
 
 for (@opt){
 	/-top(\d+)/ and do {
@@ -59,7 +57,7 @@ for (@opt){
 	/-tossv/ and do {
 		$join = ' ';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -67,7 +65,7 @@ for (@opt){
 for (@ARGV){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	my @data = map { chomp; [ split /$split/ ] } grep m/./, (defined $in ? <$in> : <STDIN>);
+	my @data = map { chomp; [ split $split ] } grep m/./, (defined $in ? <$in> : <STDIN>);
 	splice @data, 0, $top;
 	splice @data, -$bottom if $bottom;
 	splice @{$_}, 0, $left for @data;
