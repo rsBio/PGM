@@ -16,6 +16,12 @@ my $split = " ";
 my $join = " ";
 
 for (@opt){
+	/-F(\S+)/ and do {
+		$split = $1;
+	};
+	/-toF(\S+)/ and do {
+		$join = $1;
+	};
 	/-tsv/ and do {
 		$split = "\t";
 	};
@@ -46,7 +52,7 @@ for (@opt){
 	/-tonosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -54,6 +60,7 @@ for (@opt){
 for (@ARGV){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	print map { join $join, split /$split/ } (defined $in ? <$in> : <STDIN>);
+	print map { $_ . "\n" } map { chomp; join $join, split $split } 
+		(defined $in ? <$in> : <STDIN>);
 }
 
