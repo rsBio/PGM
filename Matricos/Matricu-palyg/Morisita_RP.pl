@@ -13,7 +13,7 @@ for (@ARGV){
 }
 
 my $split = " ";
-my $join = ",";
+my $join = " ";
 my $Horn = 0;
 
 for (@opt){
@@ -22,6 +22,9 @@ for (@opt){
 	};
 	/-F(\S+)/ and do {
 		$split = $1;
+	};
+	/-toF(\S+)/ and do {
+		$join = $1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -55,16 +58,10 @@ for (@FILES){
 	/^-$/ or open $in, '<', $_ or die "$0: can't open $_\n";
 	my @data = map { chomp; [ split /$split/ ] } 
 		grep m/./, (defined $in ? <$in> : <STDIN>);
-
-	2 != @{ $data[0] } and 
-		die "$0: First line of input must contain " . 
-		"number of columns and number of rows.\n";
 	
-	my( $cols, $rows ) = @{ shift @data };
-	$cols != @{ $data[0] } and 
-		die "$0: cols ($cols) != number of columns. " . 
-		"Maybe incorrect split separator?\n";
+	my( $cols, $rows ) = ( ~~ @{ $data[0] }, ~~ @data );
 	
+	$debug and print "cols: $cols, rows: $rows\n";
 	$debug and print "@{$_}\n" for @data;
 
 	my @Xi;
