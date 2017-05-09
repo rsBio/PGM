@@ -13,7 +13,7 @@ for (@ARGV){
 }
 
 my $split = " ";
-my $join = ",";
+my $join = " ";
 my $Horn = 0;
 
 for (@opt){
@@ -22,6 +22,9 @@ for (@opt){
 	};
 	/-F(\S+)/ and do {
 		$split = $1;
+	};
+	/-toF(\S+)/ and do {
+		$join = $1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -59,17 +62,16 @@ if( @FILES != 2 ){
 	open my $in0, '<', $FILES[0] or die "$0: can't open $FILES[0]\n";
 	open my $in1, '<', $FILES[1] or die "$0: can't open $FILES[1]\n";
 	my @data;
-	push @data, [ map { chomp; [ split /$split/ ] } grep m/./, <$_> ] for $in0, $in1;
+	push @data, [ map { chomp; [ split /$split/ ] } 
+		grep m/./, <$_> ] for $in0, $in1;
 		
 	my @cols;
 	my @rows;
 	
 	for my $file (0 .. 1){
-		( $cols[$file], $rows[$file] ) = @{ shift @{ $data[$file] } };
+		( $cols[$file], $rows[$file] ) = 
+			( ~~ @{ $data[$file][0] }, ~~ @{ $data[$file] } );
 		$debug and print "cols: $cols[$file], rows: $rows[$file]\n";
-		$cols[$file] != @{ $data[$file][0] } and 
-			die "$0: cols[$file] ($cols[$file]) != number of columns. " . 
-			"Maybe incorrect split separator?\n";
 	}
 	
 	if( $rows[0] != $rows[1] ){
@@ -103,7 +105,7 @@ if( @FILES != 2 ){
 			for my $j (1 .. $rows){
 				$sum += ( $data[$file][ $j-1 ][ $i-1 ] * 
 						( $data[$file][ $j-1 ][ $i-1 ] - $Horn ) ) /
-						( $Xi[$file][ $i-1 ] * ( $Xi[$file][ $i-1 ] - $Horn ) );
+					( $Xi[$file][ $i-1 ] * ( $Xi[$file][ $i-1 ] - $Horn ) );
 			}
 			$debug and printf "    lambda_i_${file} [%d]: %s\n", $i, $sum;
 			push @{ $lambda_i[$file] }, $sum;
@@ -120,8 +122,8 @@ if( @FILES != 2 ){
 		    my $sum;
 		    for my $r (0 .. $rows - 1){
 		        $sum += $data[0][$r][ $i-1 ] * $data[1][$r][ $j-1 ];
-				$debug and 
-					print "[$i:$data[0][$r][ $i-1 ] * $j:$data[1][$r][ $j-1 ]]\n";
+				$debug and print 
+					"[$i:$data[0][$r][ $i-1 ] * $j:$data[1][$r][ $j-1 ]]\n";
 		    }
 		    push @line, 2 * $sum / 
 		        ( ($lambda_i[0][ $i-1 ] + $lambda_i[1][ $j-1 ]) 
