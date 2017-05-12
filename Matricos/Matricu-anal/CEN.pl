@@ -5,11 +5,11 @@ use strict;
 
 my $debug = 0;
 
-my @ARGV_2;
+my @FILES;
 my @opt;
 
 for (@ARGV){
-	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
 }
 
 my $split = " ";
@@ -73,9 +73,7 @@ for (@opt){
 	/-d$/ and $debug = 1;
 }
 
-@ARGV = @ARGV_2;
-
-for (@ARGV){
+for (@FILES){
 	my $in;
 	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
 	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
@@ -87,10 +85,10 @@ for (@ARGV){
 		( $rows, $cols ) = reverse split ' ', shift @data;
 	}
 	else{
-		( $rows, $cols ) = (0 + @data, 0 + split /$split/, $data[0] );
+		( $rows, $cols ) = ( 0 + @data, 0 + split $split, $data[0] );
 	}
 
-	@data = map { [ split /$split/ ] } @data;
+	@data = map { [ split $split ] } @data;
 	
 	if( ! $whole_CEN ){
 	
@@ -112,8 +110,9 @@ for (@ARGV){
 				
 				}
 			
-			my $CEN = sprintf "%.4f", $RRc > 1 ? $RRc / $rows / ( $sum / ( $RRc - 1 ) ) ** (1 / $power) : 0;
-		#!	my $CEN = sprintf "%.4f", $sum > 0 ? $RRc / $sum : 0;
+			my $CEN = sprintf "%.4f", $RRc > 1 ? 
+				$RRc / $rows / ( $sum / ( $RRc - 1 ) ) ** (1 / $power) : 0;
+			
 			push @CEN, $CEN;
 			push @RRc, $RRc;
 			push @ratios, $RRc ? $CEN / $RRc : 0;
@@ -152,8 +151,10 @@ for (@ARGV){
 			$sum_sum += $RRc > 1 ? $sum : 0; 
 			
 			}
+		$debug and print "sum_sum: $sum_sum\n";
 		
-		my $CEN = sprintf "%.5f", $RR > 1 ? $RR / $rows / $cols / ( $sum_sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
+		my $CEN = sprintf "%.5f", $RR > 1 && $sum_sum ? 
+			$RR / $rows / $cols / ( $sum_sum / ( $RR - 1 ) ) ** (1 / $power) : 0;
 		
 		print $CEN, "\n";
 	}
