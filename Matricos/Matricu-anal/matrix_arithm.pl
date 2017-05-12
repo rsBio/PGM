@@ -65,44 +65,45 @@ if( @ARGV != 2 ){
 	
 	$debug and print "<<@ARGV>>\n";
 	
-	open my $in0, '<', $ARGV[0] or die "$0: [$ARGV[0]] ... : $!\n";
-	open my $in1, '<', $ARGV[1] or die "$0: [$ARGV[1]] ... : $!\n";
+	open my $in0, '<', $ARGV[0] or die "$0: Can't open '$ARGV[0]' : $!\n";
+	open my $in1, '<', $ARGV[1] or die "$0: Can't open '$ARGV[1]' : $!\n";
 	my @data;
 	push @data, [ map { chomp; $_ } grep m/./, <$_> ] for $in0, $in1;
-	
-	if( $pbm ){
-		for my $u (0 .. 1){
-			shift @{ $data[$u] };
-			}
-		}
 	
 	my @cols;
 	my @rows;
 	
-	for my $u (0 .. 1){
-		( $cols[$u], $rows[$u] ) = split ' ', shift @{ $data[$u] };
-		$debug and print "[( $cols[$u], $rows[$u] )]\n";
-	}
+	# discard pbm header
+	if( $pbm ){
+		for my $u (0 .. 1){
+			shift @{ $data[$u] };
+			shift @{ $data[$u] };
+			}
+		}
 	
 	for my $u (0 .. 1){
-		@{ $data[$u] } = map { [ split /$split/ ] } @{ $data[$u] };
+		@{ $data[$u] } = map { [ split $split ] } @{ $data[$u] };
 		$debug and print "@{$_}\n" for @{ $data[$u] };
 	}
 	
 	for my $u (0 .. 1){
-		$cols[$u] != @{ $data[$u][0] } and 
-		die "$0: cols[$u] ($cols[$u]) != num of columns.\n";
-		$rows[$u] != @{ $data[$u] } and 
-		die "$0: rows[$u] ($rows[$u]) != num of rows.\n";
-	}
+		( $cols[$u], $rows[$u] ) = ( ~~ @{ $data[$u][0] }, ~~ @{ $data[$u] } );
+		$debug and print "[( $cols[$u], $rows[$u] )]\n";
+		}
 		
 	if( $rows[0] != $rows[1] ){
-		die "Number of dimensions must be equal!\n";
+		die "Number of rows (dimensions) must be equal!\n";
+		}
+	
+	if( $cols[0] != $cols[1] ){
+		die "Number of cols (dimensions) must be equal!\n";
 		}
 		
 	for my $i (1 .. $rows[0]){
 		for my $j (1 .. $cols[0]){
-			$data[2][ $i-1 ][ $j-1 ] = $data[0][ $i-1 ][ $j-1 ] * $data[1][ $i-1 ][ $j-1 ];
+			$data[2][ $i-1 ][ $j-1 ] = 
+			$data[0][ $i-1 ][ $j-1 ] * 
+			$data[1][ $i-1 ][ $j-1 ];
 		}
 	}
 
