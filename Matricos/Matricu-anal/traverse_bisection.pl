@@ -62,7 +62,7 @@ for (@opt){
 	/-tonosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -183,7 +183,8 @@ for (@ARGV){
 	print do { local $" = $join; "@{$_}\n" } for @data;
 
 	if( !$to_pgm ){
-		print map "[$_]", map { join ' ', map $_ + 1, @{$_} } @coords;
+		print map "[$_]", join ',', map "($_)", 
+			map { join ',', map $_ + 1, @{$_} } @coords;
 		print "\n";
 	}
 }

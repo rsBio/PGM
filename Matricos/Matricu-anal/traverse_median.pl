@@ -17,7 +17,6 @@ my $join = " ";
 my $pbm = 0;
 my $to_pbm = 0;
 my $to_pgm = 0;
-my $till_end = 1;
 my $row_step = 10;
 my $col_step = 10;
 my $step_proc_on = 1;
@@ -26,9 +25,6 @@ my $step_proc = 20;
 for (@opt){
 	/-pbm/ and do {
 		$pbm = 1;
-	};
-	/-notillend/ and do {
-		$till_end = 0;
 	};
 	/-stepproc(\d+)/ and do {
 		$step_proc_on = 1;
@@ -83,7 +79,7 @@ for (@opt){
 	/-tonosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
@@ -142,8 +138,10 @@ for (@ARGV){
 					push @rows, $row;
 					push @cols, $col;
 					}
-				$data[ $row ][ $col ] == 0 and $data[ $row ][ $col ] = $grey;
-				$data[ $row ][ $col ] == 1 and $data[ $row ][ $col ] = $grey_on_dot;
+				$data[ $row ][ $col ] == 0 
+					and $data[ $row ][ $col ] = $grey;
+				$data[ $row ][ $col ] == 1 
+					and $data[ $row ][ $col ] = $grey_on_dot;
 				}
 			}
 		
@@ -166,7 +164,8 @@ for (@ARGV){
 		$data[ $median_row ][ $median_col ] =~ s/$grey/$grey_on_middle/ ||
 		$data[ $median_row ][ $median_col ] =~ s/$grey_on_dot/$dot_on_middle/;
 		
-		$debug and print "(rows:@rows|cols:@cols)[median_row:$median_row][median_col:$median_col]\n";
+		$debug and print "(rows:@rows|cols:@cols)"
+			. "[median_row:$median_row][median_col:$median_col]\n";
 		
 		push @coords, [ $median_row, $median_col ];
 		( $x, $y ) = ( $median_row + 1, $median_col + 1 );
@@ -192,7 +191,8 @@ for (@ARGV){
 	print do { local $" = $join; "@{$_}\n" } for @data;
 
 	if( !$to_pgm ){
-		print map "[$_]", map { join ' ', map $_ + 1, @{$_} } @coords;
+		print map "[$_]", join ',', map "($_)", 
+			map { join ',', map $_ + 1, @{$_} } @coords;
 		print "\n";
 	}
 }
