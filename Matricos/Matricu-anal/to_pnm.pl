@@ -12,7 +12,7 @@ for (@ARGV){
 	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
 }
 
-my $split = "\t";
+my $split = " ";
 my $join = " ";
 my $to_pbm = 0;
 my $to_pgm = 0;
@@ -67,7 +67,7 @@ for (@opt){
 	/-nosep/ and do {
 		$join = '';
 	};
-	/-d/ and $debug = 1;
+	/-d$/ and $debug = 1;
 }
 
 @ARGV = @ARGV_2;
