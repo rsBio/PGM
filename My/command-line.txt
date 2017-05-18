@@ -1,0 +1,13 @@
+'cat' with file names: tail -n +1 <files>
+'cat' with line numers: cat -n
+
+append: echo '1.000 1.000' >> <file>
+
+
+To use:
+xargs
+cat -A
+
+Examples:
+
+ls | grep sine | grep pops | xargs ./is_matrix.pl
