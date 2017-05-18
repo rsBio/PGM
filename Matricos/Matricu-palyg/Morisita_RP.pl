@@ -14,11 +14,11 @@ for (@ARGV){
 
 my $split = " ";
 my $join = " ";
-my $Horn = 0;
+my $Simpson = 0;
 
 for (@opt){
-	/-horn/i and do {
-		$Horn = 1;
+	/-simpson/i and do {
+		$Simpson = 1;
 	};
 	/-F(\S+)/ and do {
 		$split = $1;
@@ -80,10 +80,10 @@ for (@FILES){
 	for my $i (1 .. $cols){
 		my $sum = 0;
 		for my $j (1 .. $rows){
-			( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) ) or next;
+			( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Simpson ) ) or next;
 		    $sum += ( $data[ $j-1 ][ $i-1 ] * 
-					( $data[ $j-1 ][ $i-1 ] - $Horn ) ) /
-					( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Horn ) );
+					( $data[ $j-1 ][ $i-1 ] - $Simpson ) ) /
+					( $Xi[ $i-1 ] * ( $Xi[ $i-1 ] - $Simpson ) );
 		}
 		$debug and printf "    lambda_i [%d]: %s\n", $i, $sum;
 		push @lambda_i, $sum;
