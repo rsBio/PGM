@@ -1,0 +1,15 @@
+pnmenlarge 30 0.pgm > x0.pgm
+pnmenlarge 20 1.pgm > x1.pgm
+pnmenlarge 20 2.pgm > x2.pgm
+pnmenlarge 20 3.pgm > x3.pgm
+pnmenlarge 20 4.pgm > x4.pgm
+pnmenlarge 20 5.pgm > x5.pgm
+pnmtopng x0.pgm > y0.png
+touch y0start.png
+pnmtopng x1.pgm > y1.png
+pnmtopng x2.pgm > y2.png
+pnmtopng x3.pgm > y3.png
+pnmtopng x4.pgm > y4.png
+pnmtopng x5.pgm > y5.png
+rm x*.pgm
+
