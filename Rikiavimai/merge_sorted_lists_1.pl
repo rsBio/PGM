@@ -30,10 +30,13 @@ for (@opt){
 	/-nosep/ and do {
 		$split = '';
 	};
+	/-d$/ and do {
+		$debug = 1;
+	};
 }
 
 sub merge_sorted_lists_1 {
-	my @refs = @_;
+	my @refs = map { [ @{ $_ } ] } @_;	# no destruction
 	my @A;
 	
 	while( @refs = grep { @{ $_ } } @refs ){
@@ -49,7 +52,6 @@ sub merge_sorted_lists_1 {
 			}
 		
 		push @A, shift @{ $ref_min };
-		
 		}
 	
 	return @A;
@@ -62,4 +64,5 @@ for (@FILES){
 		grep m/./, (defined $in ? <$in> : <STDIN>);
 	
 	print map "$_\n", join ' ', merge_sorted_lists_1( @data );
+	$debug and print map "$_\n", join ' ', @{ $_ } for @data;
 }
