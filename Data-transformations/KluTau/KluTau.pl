@@ -76,6 +76,7 @@ for (@FILES){
 	my $first_finish_place = $data[ 0 ];
 	
 	my $finish_place;
+	my $prev_finish_place = 0;
 	my $team;
 	my %h;
 	
@@ -95,7 +96,9 @@ for (@FILES){
 			$h{ $team }{ finish_time } = $4;
 			$debug and print "team:[$team], town:[$h{ $team }{ town }], " .
 				"country:[$h{ $team }{ country }], finish_time:[$h{ $team }{ finish_time }]\n";
-			$h{ $team }{ finish_place } = $finish_place;
+			$h{ $team }{ finish_place } = 
+				$finish_place != $prev_finish_place ? $finish_place : '';
+			$prev_finish_place = $finish_place;
 			redo;
 			};
 		
@@ -115,7 +118,8 @@ for (@FILES){
 	
 	print map "$_\n", map {
 		join $join, 
-			$first_finish_place ++,
+			( length $h{ $_ }{ finish_place } ? 
+				$first_finish_place ++ : '' ),
 			$_ . ', ' . $h{ $_ }{ town }, 
 			$h{ $_ }{ country },
 			to_h_mm_ss( $h{ $_ }{ team_time_acc } ),
