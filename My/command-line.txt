@@ -3,6 +3,8 @@
 
 append: echo '1.000 1.000' >> <file>
 
+remove carriage return:
+perl -i -pe 'y|\r||d' script.pl
 
 To use:
 xargs
