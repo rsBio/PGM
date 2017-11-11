@@ -1,0 +1,2634 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	my $min = 0;
+	my @refs;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		my $depth = 0;
+		push @refs, $ref;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+				;
+			push @ref, $ref;
+			$depth ++;
+			if( $depth > $min + 1 ){
+				# TO BALANCE
+				my $tmp_ref = $refs[ -4 ];
+				# ?????????
+				# ????????
+				}
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub binary_tree_sort {
+	my %tree = binary_tree( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%tree;
+	
+	while( @refs ){
+		my $ref = pop @refs;
+		
+		while( exists $ref->{ 'left' } ){
+			push @refs, $ref;
+			$ref = \%{ $ref->{ 'left' } };
+			}
+		
+		push @A, $ref->{ 'value' };
+		@refs and delete $refs[ -1 ]->{ 'left' };
+		
+		if( exists $ref->{ 'right' } ){
+			$ref = \%{ $ref->{ 'right' } };
+			push @refs, $ref;
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', binary_tree_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub binary_tree_sort {
+	my %tree = binary_tree( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%tree;
+	
+	while( @refs ){
+		my $ref = pop @refs;
+		
+		while( exists $ref->{ 'left' } ){
+			push @refs, $ref;
+			$ref = \%{ $ref->{ 'left' } };
+			}
+		
+		push @A, $ref->{ 'value' };
+		@refs and delete $refs[ -1 ]->{ 'left' };
+		
+		if( exists $ref->{ 'right' } ){
+			$ref = \%{ $ref->{ 'right' } };
+			push @refs, $ref;
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', binary_tree_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub bubble_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $A[ $j + 1 ] and do {
+				@A[ $j, $j + 1 ] = @A[ $j + 1, $j ];
+				}
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', bubble_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub half_presort {
+	my @A = @_;
+	return @A if @A < 2;
+	
+	for my $i ( 0 .. ( @A / 2 ) - 1 ){
+		$A[ $i ] > $A[ -1 - $i ] and do {
+			( $A[ $i ], $A[ -1 - $i ] ) = ( $A[ -1 - $i ], $A[ $i ] );
+			};
+		}
+	
+	my @arr;
+	push @arr, half_presort( @A[ 0 .. ( @A / 2 ) - 1 ] );
+	push @arr, half_presort( @A[ @A / 2 .. @A - 1 ] );
+	
+	return @arr;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', half_presort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub heap {
+	my @A = @_;
+	my %heap;
+	
+	@A and $heap{ 'value' } = shift @A;
+	my @ways = map { -$_ } 1 .. 20;
+	
+	for my $number ( @A ){
+		my $ref = \%heap;
+		
+		$ways[ 0 ] < 0 and do {
+			my $way_gen = abs shift @ways;
+			
+			unshift @ways, map {
+				sprintf "%0${way_gen}b", $_
+				} 0 .. 2 ** $way_gen - 1;
+			};
+		
+		my @way = split //, shift @ways;
+		$debug and print "\@way:[@way]\n";
+		
+		for my $i ( @way ){
+			my $direction = $i == 0 ? 'left' : 'right';
+			
+			$ref->{ 'value' } > $number and do {
+				( $ref->{ 'value' }, $number ) = ( $number, $ref->{ 'value' } );
+				};
+			
+			if( exists $ref->{ $direction } ){
+				$ref = \%{ $ref->{ $direction } };
+				}
+			else{
+				$ref->{ $direction }->{ 'value' } = $number;
+				last;
+				}			
+			}
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "\@A:@A\n";
+	$debug and print Dumper( \%heap );
+	$debug and print "$_ ==> $heap{ $_ }\n" for keys %heap;
+	return %heap;
+	}
+
+sub heap_sort {
+	my %heap = heap( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%heap;
+	
+	while( @refs ){
+		my $min_ref = shift @refs;
+		push @A, $min_ref->{ 'value' };
+		
+		exists $min_ref->{ 'left' } and do {
+			my $value = $min_ref->{ 'left' }->{ 'value' };
+			
+			my $cnt = 0;
+			for my $ref ( @refs ){ 
+				last if $value <= $ref->{ 'value' };
+				$cnt ++;
+				}
+			
+			splice @refs, $cnt, 0, \%{ $min_ref->{ 'left' } };
+			};
+		
+		exists $min_ref->{ 'right' } and do {
+			my $value = $min_ref->{ 'right' }->{ 'value' };
+			
+			my $cnt = 0;
+			for my $ref ( @refs ){ 
+				last if $value <= $ref->{ 'value' };
+				$cnt ++;
+				}
+			
+			splice @refs, $cnt, 0, \%{ $min_ref->{ 'right' } };
+			};
+		
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', heap_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+my $find;
+
+for (@opt){
+	/-find(\d+)/ and do {
+		$find = $1;
+	};
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub is_in_array__primitive {
+	$find //= shift;
+	my $found;
+	
+#	$find == $_ and ++ $found for @_;
+	$found = grep $_ == $find, @_;
+	
+	return $found ? "TRUE" : "FALSE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', is_in_array__primitive( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+my $find;
+
+for (@opt){
+	/-find(\d+)/ and do {
+		$find = $1;
+	};
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub is_in_array__binary_tree {
+	$find //= shift;
+	my %tree = binary_tree( @_ );
+	my $found = 0;
+	my $ref = \%tree;
+	
+	while( my $cmp = $find <=> $ref->{ 'value' } || $found ++ ){
+		my $direction = $cmp == -1 ? "left" : "right";
+		
+		if( exists $ref->{ $direction } ){
+			$ref = \%{ $ref->{ $direction } };
+			}
+		else{
+			last;
+			}
+		}
+	
+	return $found ? "TRUE" : "FALSE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', is_in_array__binary_tree( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub is_sorted {
+	my @A = @_;
+	my $false = 0;
+	
+	for my $i ( 0 .. @A - 2 ){
+		last if $false += $A[ $i ] > $A[ $i + 1 ];
+		}
+	
+	return $false ? "FALSE" : "TRUE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", is_sorted( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub merge_sorted_lists_1 {
+	my @refs = map { [ @{ $_ } ] } @_;	# no destruction
+	my @A;
+	
+	while( @refs = grep { @{ $_ } } @refs ){
+		
+		my $min = $refs[ 0 ]->[ 0 ];
+		my $ref_min = $refs[ 0 ];
+		
+		for my $ref ( @refs ){
+			$min > $ref->[ 0 ] and do {
+				$min = $ref->[ 0 ];
+				$ref_min = $ref;
+				};
+			}
+		
+		push @A, shift @{ $ref_min };
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', merge_sorted_lists_1( @data );
+	$debug and print map "$_\n", join ' ', @{ $_ } for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = '';
+	};
+}
+
+sub merge_sorted_lists_1 {
+	my @refs = map { [ @{ $_ } ] } @_;	# no destruction
+	my @A;
+	
+	while( @refs = grep { @{ $_ } } @refs ){
+		
+		my $min = $refs[ 0 ]->[ 0 ];
+		my $ref_min = $refs[ 0 ];
+		
+		for my $ref ( @refs ){
+			$min > $ref->[ 0 ] and do {
+				$min = $ref->[ 0 ];
+				$ref_min = $ref;
+				};
+			}
+		
+		push @A, shift @{ $ref_min };
+		}
+	
+	return @A;
+	}
+
+sub merge_sort {
+	my @A = @_;
+	return @A if @A < 2;
+	
+	my @left = merge_sort( @A[ 0 .. ( @A / 2 ) - 1 ] );
+	my @right = merge_sort( @A[ @A / 2 .. @A - 1 ] );
+	
+	return merge_sorted_lists_1( \@left, \@right );
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', merge_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = '';
+	};
+}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', sort { $a <=> $b } ( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub selection_1_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		my $max = $A[ $i ];
+		my $max_j = $i;
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $max and do {
+				$max = $A[ $j ];
+				$max_j = $j;
+				}
+			}
+		( @A[ $max_j, $i ] ) = ( @A[ $i, $max_j ] );
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', selection_1_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub selection_2_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $A[ $i ] and do {
+				@A[ $j, $i ] = @A[ $i, $j ];
+				}
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', selection_2_sort( @{$_} ) for @data;
+}
+5 6
+LUODNS
+IETAAL
+SVULVE
+IAVOUN
+TLASAG
+5
+valtis
+uola
+slengas
+lietuva
+vanduo
+
+5 6
+LOUDNS
+IETAAL
+SVULVE
+IAVOUN
+TLASAG
+5
+valtis
+uola
+slengas
+lietuva
+vanduo
+
+3 4
+MJIN
+EASI
+RKYM
+2
+minija
+merkys
+6 7
+ANRUZAV
+MOARINA
+EDUSNEM
+LAVYINO
+SVLETER
+VIOENIK
+6
+violetine
+ruzava
+raudona
+morkine
+melsva
+vysnine
+7 9
+ETIANTERA
+RAREAGARR
+GENNTAGTI
+AGTEGRESU
+RNINASDAM
+AANETSIJA
+NTIJAATAR
+8
+raganaite
+argentina
+garantija
+rentgenas
+terariumas
+tragedija
+ratas
+ten
+9 16
+OVPSISNODUASGELT
+VLESIKIUMERKYLAO
+ERUSPIEUPDEEDUBN
+SUMKAAVMPOTDEUGP
+MEKASGRJKUAUBANE
+ILZSKBYUSLIEIVID
+REAAEIDOAVSRKKAE
+ABKKMSBARYKISEBE
+RAVYPINEEKUIMLUD
+16
+kempine
+pumpotaukslis
+kreivabude
+skylabude
+geltonpede
+juodbaravykis
+kelmiuke
+ugniabude
+musmire
+baravykas
+kazlekas
+pievagrybis
+lepsis
+voveruska
+raudonikis
+umede
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Time::HiRes qw( usleep );
+
+my $debug = 0;
+my $debug2 = 0;
+my $debug3 = 0;
+
+my @ARGV_2;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+}
+
+my $split = "";
+my $wall = '*';
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-d/ and $debug = 1;
+	/-d2/ and $debug2 = 1;
+	/-d3/ and $debug3 = 1;
+}
+
+@ARGV = @ARGV_2;
+
+for (@ARGV){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
+    chomp @data;
+	
+	my ($rows, $cols) = split ' ', $data[ 0 ];
+	my $area = $rows * $cols;
+	
+	$debug and print "Area: $area ($rows x $cols)\n";
+	my @area;
+	push @area, [ ($wall) x ($cols + 2) ];
+	push @area, [ $wall, (split /$split/), $wall ] for @data[ 1 .. $rows ];
+	push @area, [ ($wall) x ($cols + 2) ];
+	$debug and print @{$_}, "\n" for @area;
+	
+	my $n = $data[ $rows + 1 ];
+	my @words = @data[ $rows + 2 .. $rows + 1 + $n ];
+	$debug and printf "Num of words: %d\n", 0 + @words;
+
+	my %letters;
+	for my $i (1 .. $rows){
+		for my $j (1 .. $cols){
+			push @{ $letters{ $area[$i][$j] } }, [$i, $j];
+		}
+	}
+	$debug and printf "$_: %s\n", join '', 
+		map { "[@{$_}]" } @{ $letters{$_} } for sort keys %letters;
+	
+	my @seq = map { (map uc, split /\B/) } map { s/^/*/r } @words;
+	$debug and print "Seq: [@seq]\n";
+	
+	my @mem;
+	push @mem, [(0) x ($cols + 2)] for 1 .. $rows + 2;
+#%	print "<@{$_}>\n" for @mem;
+
+	my @solution;
+	my @solution_stack;
+	my( $prevx, $prevy ) = (-2, -2);
+	my @xy_stack = [$prevx, $prevy];
+	my $solved = 0;
+	
+	go();
+	
+	sub go {
+		return if $solved;
+		my $lett = shift @seq;
+		my @try = do {
+			if( $lett =~ /^\*(\w)/ ){
+				@{ $letters{ $1 } };
+			}
+			else {
+				[$prevx + 1, $prevy], [$prevx, $prevy + 1],
+				[$prevx - 1, $prevy], [$prevx, $prevy - 1],
+			}
+		};
+		for my $try (@try){
+			my ($x, $y) = @{$try};
+		#%	print "[$x $y]\n";
+			$mem[$x][$y] and next;
+		#%	print "[$area[$x][$y] ne $lett]\n";
+			$area[$x][$y] ne $lett =~ y/*//dr and next;
+			$mem[$x][$y] = $lett =~ s/.$/lc $&/er =~ s/\*(.)/uc $1/er;
+			push @xy_stack, [$x, $y];
+			($prevx, $prevy) = ($x, $y);
+			$debug2 and print 0 + @xy_stack, "\n";
+			$debug2 and pretty_print(\@mem, \@xy_stack);
+			$debug3 and do {
+				usleep(200_000);
+				print "\033[2J";    #clear the screen
+				print "\033[0;0H"; #jump to 0,0	
+				print 0 + @xy_stack, "\n";
+				pretty_print(\@mem, \@xy_stack);
+			};
+		#%	print "<@{$_}>\n" for @mem;
+			if( @xy_stack > $area - 0){
+				@solution = map { [ @{$_} ] } @mem;
+				@solution_stack = map { [ @{$_} ] } @xy_stack;
+				$solved = 1;
+			}
+			return if $solved;
+			go();
+			return if $solved;
+			$mem[$x][$y] = 0;
+			pop @xy_stack;
+			($prevx, $prevy) = @{ $xy_stack[-1] };
+		}
+		unshift @seq, $lett;
+	}
+	
+	$debug and print "<@{$_}>\n" for @solution;
+	$debug and print "[@{$_}]" for @solution_stack;
+	$debug and print "\n";
+	
+	print $solved ? "SOLVED\n" : "NO SOLUTION\n";
+	pretty_print(\@solution, \@solution_stack);
+
+	sub pretty_print {
+		my( $ref_to_array, $ref_to_stack ) = (shift, shift);
+		my @array = map { [ @{$_} ] } @{$ref_to_array};
+		my @stack = map { [ @{$_} ] } @{$ref_to_stack};
+	
+		@array = map { (
+					[ ('+', '-') x ($cols + 2) ],
+					[ map { ('|', $_ || ' ') } @{$_} ]
+				) } @array;
+		for my $i (0 .. @stack - 2){
+			my( $x0, $y0 ) = @{ $stack[$i] };
+			my( $x1, $y1 ) = @{ $stack[$i+1] };
+		##%	print "[$array[$x1 * 2][$y1 * 2]]\n";
+			$array[$x1 * 2 + 1][$y1 * 2 + 1] =~ /[A-Z]/ and next;
+			if( $x1 - $x0 == 1 and $y1 - $y0 == 0){
+				$array[($x0 + 1) * 2][$y0 * 2 + 1] = ' ';
+			}
+			if( $x1 - $x0 == 0 and $y1 - $y0 == 1){
+				$array[$x0 * 2 + 1][($y0 + 1) * 2] = ' ';
+			}
+			if( $x0 - $x1 == 1 and $y1 - $y0 == 0){
+				$array[($x1 + 1) * 2][$y0 * 2 + 1] = ' ';
+			}
+			if( $x1 - $x0 == 0 and $y0 - $y1 == 1){
+				$array[$x0 * 2 + 1][($y1 + 1) * 2] = ' ';
+			}
+		}
+		splice @array, 0, 2;
+		pop @array;
+		map { splice @{$_}, 0, 2; pop @{$_} } @array;
+		print do { local $" = '', "@{$_}\n" } for @array;
+	}
+}
+
+
+SOLVED
++-+-+-+-+-+-+
+|L|o u d n|S|
++ +-+-+-+ + +
+|i e t|a|a|l|
++-+-+ + + + +
+|s|V|u|l|V|e|
++ + + + +-+ +
+|i|a|v|o U|n|
++ + + +-+-+ +
+|t l|a|s a g|
++-+-+-+-+-+-+
+SOLVED
++-+-+-+-+
+|M|j i n|
++ + +-+ +
+|e|a|s|i|
++ +-+ + +
+|r k y|M|
++-+-+-+-+
+SOLVED
++-+-+-+-+-+-+-+
+|a n|R u z a v|
++-+ +-+-+-+-+ +
+|M|o|a R|i n|a|
++ + + +-+ + +-+
+|e|d u|s n|e|M|
++ +-+-+ +-+-+ +
+|l|a|V y|i n|o|
++ + +-+-+ + + +
+|s v|l e t|e|r|
++-+-+ +-+-+-+ +
+|V i o|e n i k|
++-+-+-+-+-+-+-+
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @ARGV_2;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+}
+
+my $split = "";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-d/ and $debug = 1;
+}
+
+@ARGV = @ARGV_2;
+
+for (@ARGV){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
+    
+	my ($rows, $cols) = split ' ', $data[ 0 ];
+	my $area = $rows * $cols;
+	
+	$debug and print "Area: $area ($rows x $cols)\n";
+	my $ok = 1;
+	my $eq = 0;
+	$ok = 0, print "Wide of matrix != number of columns!\n" if 
+		$rows != ($eq = grep { $_ == $cols } map { length $data[ $_ ] =~ s/\n//r } 1 .. $rows);
+	$debug and print "Rows: $rows, Eq: $eq\n";
+
+	my $n = $data[ $rows + 1 ];
+	my $cnt_let = 0 + eval join '+', map { length $data[$rows + 1 + $_] =~ s/\n//r } 1 .. $n;
+	$ok = 0, print "Area of letter matrix != num of all letters in all words!\n" if
+		$area != $cnt_let;
+	$debug and print "All letters in all words: $cnt_let\n";
+
+	print $ok ? "Data is OK.\n" : "Data is WRONG.\n";
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	my $min = 0;
+	my @refs;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		my $depth = 0;
+		push @refs, $ref;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+				;
+			push @ref, $ref;
+			$depth ++;
+			if( $depth > $min + 1 ){
+				# TO BALANCE
+				my $tmp_ref = $refs[ -4 ];
+				# ?????????
+				# ????????
+				}
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub binary_tree_sort {
+	my %tree = binary_tree( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%tree;
+	
+	while( @refs ){
+		my $ref = pop @refs;
+		
+		while( exists $ref->{ 'left' } ){
+			push @refs, $ref;
+			$ref = \%{ $ref->{ 'left' } };
+			}
+		
+		push @A, $ref->{ 'value' };
+		@refs and delete $refs[ -1 ]->{ 'left' };
+		
+		if( exists $ref->{ 'right' } ){
+			$ref = \%{ $ref->{ 'right' } };
+			push @refs, $ref;
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', binary_tree_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub binary_tree_sort {
+	my %tree = binary_tree( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%tree;
+	
+	while( @refs ){
+		my $ref = pop @refs;
+		
+		while( exists $ref->{ 'left' } ){
+			push @refs, $ref;
+			$ref = \%{ $ref->{ 'left' } };
+			}
+		
+		push @A, $ref->{ 'value' };
+		@refs and delete $refs[ -1 ]->{ 'left' };
+		
+		if( exists $ref->{ 'right' } ){
+			$ref = \%{ $ref->{ 'right' } };
+			push @refs, $ref;
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', binary_tree_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub bubble_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $A[ $j + 1 ] and do {
+				@A[ $j, $j + 1 ] = @A[ $j + 1, $j ];
+				}
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', bubble_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub half_presort {
+	my @A = @_;
+	return @A if @A < 2;
+	
+	for my $i ( 0 .. ( @A / 2 ) - 1 ){
+		$A[ $i ] > $A[ -1 - $i ] and do {
+			( $A[ $i ], $A[ -1 - $i ] ) = ( $A[ -1 - $i ], $A[ $i ] );
+			};
+		}
+	
+	my @arr;
+	push @arr, half_presort( @A[ 0 .. ( @A / 2 ) - 1 ] );
+	push @arr, half_presort( @A[ @A / 2 .. @A - 1 ] );
+	
+	return @arr;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', half_presort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub heap {
+	my @A = @_;
+	my %heap;
+	
+	@A and $heap{ 'value' } = shift @A;
+	my @ways = map { -$_ } 1 .. 20;
+	
+	for my $number ( @A ){
+		my $ref = \%heap;
+		
+		$ways[ 0 ] < 0 and do {
+			my $way_gen = abs shift @ways;
+			
+			unshift @ways, map {
+				sprintf "%0${way_gen}b", $_
+				} 0 .. 2 ** $way_gen - 1;
+			};
+		
+		my @way = split //, shift @ways;
+		$debug and print "\@way:[@way]\n";
+		
+		for my $i ( @way ){
+			my $direction = $i == 0 ? 'left' : 'right';
+			
+			$ref->{ 'value' } > $number and do {
+				( $ref->{ 'value' }, $number ) = ( $number, $ref->{ 'value' } );
+				};
+			
+			if( exists $ref->{ $direction } ){
+				$ref = \%{ $ref->{ $direction } };
+				}
+			else{
+				$ref->{ $direction }->{ 'value' } = $number;
+				last;
+				}			
+			}
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "\@A:@A\n";
+	$debug and print Dumper( \%heap );
+	$debug and print "$_ ==> $heap{ $_ }\n" for keys %heap;
+	return %heap;
+	}
+
+sub heap_sort {
+	my %heap = heap( @_ );
+	my @A;
+	
+	my @refs;
+	push @refs, \%heap;
+	
+	while( @refs ){
+		my $min_ref = shift @refs;
+		push @A, $min_ref->{ 'value' };
+		
+		exists $min_ref->{ 'left' } and do {
+			my $value = $min_ref->{ 'left' }->{ 'value' };
+			
+			my $cnt = 0;
+			for my $ref ( @refs ){ 
+				last if $value <= $ref->{ 'value' };
+				$cnt ++;
+				}
+			
+			splice @refs, $cnt, 0, \%{ $min_ref->{ 'left' } };
+			};
+		
+		exists $min_ref->{ 'right' } and do {
+			my $value = $min_ref->{ 'right' }->{ 'value' };
+			
+			my $cnt = 0;
+			for my $ref ( @refs ){ 
+				last if $value <= $ref->{ 'value' };
+				$cnt ++;
+				}
+			
+			splice @refs, $cnt, 0, \%{ $min_ref->{ 'right' } };
+			};
+		
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', heap_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+my $find;
+
+for (@opt){
+	/-find(\d+)/ and do {
+		$find = $1;
+	};
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub is_in_array__primitive {
+	$find //= shift;
+	my $found;
+	
+#	$find == $_ and ++ $found for @_;
+	$found = grep $_ == $find, @_;
+	
+	return $found ? "TRUE" : "FALSE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', is_in_array__primitive( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Data::Dumper;
+    
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+my $find;
+
+for (@opt){
+	/-find(\d+)/ and do {
+		$find = $1;
+	};
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub binary_tree {
+	my @A = @_;
+	my %tree;
+	
+	for my $number ( @A ){
+		my $ref = \%tree;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub is_in_array__binary_tree {
+	$find //= shift;
+	my %tree = binary_tree( @_ );
+	my $found = 0;
+	my $ref = \%tree;
+	
+	while( my $cmp = $find <=> $ref->{ 'value' } || $found ++ ){
+		my $direction = $cmp == -1 ? "left" : "right";
+		
+		if( exists $ref->{ $direction } ){
+			$ref = \%{ $ref->{ $direction } };
+			}
+		else{
+			last;
+			}
+		}
+	
+	return $found ? "TRUE" : "FALSE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', is_in_array__binary_tree( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub is_sorted {
+	my @A = @_;
+	my $false = 0;
+	
+	for my $i ( 0 .. @A - 2 ){
+		last if $false += $A[ $i ] > $A[ $i + 1 ];
+		}
+	
+	return $false ? "FALSE" : "TRUE";
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", is_sorted( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = 1;
+	};
+}
+
+sub merge_sorted_lists_1 {
+	my @refs = map { [ @{ $_ } ] } @_;	# no destruction
+	my @A;
+	
+	while( @refs = grep { @{ $_ } } @refs ){
+		
+		my $min = $refs[ 0 ]->[ 0 ];
+		my $ref_min = $refs[ 0 ];
+		
+		for my $ref ( @refs ){
+			$min > $ref->[ 0 ] and do {
+				$min = $ref->[ 0 ];
+				$ref_min = $ref;
+				};
+			}
+		
+		push @A, shift @{ $ref_min };
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', merge_sorted_lists_1( @data );
+	$debug and print map "$_\n", join ' ', @{ $_ } for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = '';
+	};
+}
+
+sub merge_sorted_lists_1 {
+	my @refs = map { [ @{ $_ } ] } @_;	# no destruction
+	my @A;
+	
+	while( @refs = grep { @{ $_ } } @refs ){
+		
+		my $min = $refs[ 0 ]->[ 0 ];
+		my $ref_min = $refs[ 0 ];
+		
+		for my $ref ( @refs ){
+			$min > $ref->[ 0 ] and do {
+				$min = $ref->[ 0 ];
+				$ref_min = $ref;
+				};
+			}
+		
+		push @A, shift @{ $ref_min };
+		}
+	
+	return @A;
+	}
+
+sub merge_sort {
+	my @A = @_;
+	return @A if @A < 2;
+	
+	my @left = merge_sort( @A[ 0 .. ( @A / 2 ) - 1 ] );
+	my @right = merge_sort( @A[ @A / 2 .. @A - 1 ] );
+	
+	return merge_sorted_lists_1( \@left, \@right );
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', merge_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-d$/ and do {
+		$debug = '';
+	};
+}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', sort { $a <=> $b } ( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub selection_1_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		my $max = $A[ $i ];
+		my $max_j = $i;
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $max and do {
+				$max = $A[ $j ];
+				$max_j = $j;
+				}
+			}
+		( @A[ $max_j, $i ] ) = ( @A[ $i, $max_j ] );
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', selection_1_sort( @{$_} ) for @data;
+}
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @FILES;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @FILES, $_);
+}
+
+my $split = " ";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+}
+
+sub selection_2_sort {
+	my @A = @_;
+	for my $i ( reverse 1 .. @A - 1 ){
+		for my $j ( 0 .. $i - 1 ){
+			$A[ $j ] > $A[ $i ] and do {
+				@A[ $j, $i ] = @A[ $i, $j ];
+				}
+			}
+		}
+	
+	return @A;
+	}
+
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = map { chomp; [ split $split ] } 
+		grep m/./, (defined $in ? <$in> : <STDIN>);
+	
+	print map "$_\n", join ' ', selection_2_sort( @{$_} ) for @data;
+}
+5 6
+LUODNS
+IETAAL
+SVULVE
+IAVOUN
+TLASAG
+5
+valtis
+uola
+slengas
+lietuva
+vanduo
+
+5 6
+LOUDNS
+IETAAL
+SVULVE
+IAVOUN
+TLASAG
+5
+valtis
+uola
+slengas
+lietuva
+vanduo
+
+3 4
+MJIN
+EASI
+RKYM
+2
+minija
+merkys
+6 7
+ANRUZAV
+MOARINA
+EDUSNEM
+LAVYINO
+SVLETER
+VIOENIK
+6
+violetine
+ruzava
+raudona
+morkine
+melsva
+vysnine
+7 9
+ETIANTERA
+RAREAGARR
+GENNTAGTI
+AGTEGRESU
+RNINASDAM
+AANETSIJA
+NTIJAATAR
+8
+raganaite
+argentina
+garantija
+rentgenas
+terariumas
+tragedija
+ratas
+ten
+9 16
+OVPSISNODUASGELT
+VLESIKIUMERKYLAO
+ERUSPIEUPDEEDUBN
+SUMKAAVMPOTDEUGP
+MEKASGRJKUAUBANE
+ILZSKBYUSLIEIVID
+REAAEIDOAVSRKKAE
+ABKKMSBARYKISEBE
+RAVYPINEEKUIMLUD
+16
+kempine
+pumpotaukslis
+kreivabude
+skylabude
+geltonpede
+juodbaravykis
+kelmiuke
+ugniabude
+musmire
+baravykas
+kazlekas
+pievagrybis
+lepsis
+voveruska
+raudonikis
+umede
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use Time::HiRes qw( usleep );
+
+my $debug = 0;
+my $debug2 = 0;
+my $debug3 = 0;
+
+my @ARGV_2;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+}
+
+my $split = "";
+my $wall = '*';
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-d/ and $debug = 1;
+	/-d2/ and $debug2 = 1;
+	/-d3/ and $debug3 = 1;
+}
+
+@ARGV = @ARGV_2;
+
+for (@ARGV){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
+    chomp @data;
+	
+	my ($rows, $cols) = split ' ', $data[ 0 ];
+	my $area = $rows * $cols;
+	
+	$debug and print "Area: $area ($rows x $cols)\n";
+	my @area;
+	push @area, [ ($wall) x ($cols + 2) ];
+	push @area, [ $wall, (split /$split/), $wall ] for @data[ 1 .. $rows ];
+	push @area, [ ($wall) x ($cols + 2) ];
+	$debug and print @{$_}, "\n" for @area;
+	
+	my $n = $data[ $rows + 1 ];
+	my @words = @data[ $rows + 2 .. $rows + 1 + $n ];
+	$debug and printf "Num of words: %d\n", 0 + @words;
+
+	my %letters;
+	for my $i (1 .. $rows){
+		for my $j (1 .. $cols){
+			push @{ $letters{ $area[$i][$j] } }, [$i, $j];
+		}
+	}
+	$debug and printf "$_: %s\n", join '', 
+		map { "[@{$_}]" } @{ $letters{$_} } for sort keys %letters;
+	
+	my @seq = map { (map uc, split /\B/) } map { s/^/*/r } @words;
+	$debug and print "Seq: [@seq]\n";
+	
+	my @mem;
+	push @mem, [(0) x ($cols + 2)] for 1 .. $rows + 2;
+#%	print "<@{$_}>\n" for @mem;
+
+	my @solution;
+	my @solution_stack;
+	my( $prevx, $prevy ) = (-2, -2);
+	my @xy_stack = [$prevx, $prevy];
+	my $solved = 0;
+	
+	go();
+	
+	sub go {
+		return if $solved;
+		my $lett = shift @seq;
+		my @try = do {
+			if( $lett =~ /^\*(\w)/ ){
+				@{ $letters{ $1 } };
+			}
+			else {
+				[$prevx + 1, $prevy], [$prevx, $prevy + 1],
+				[$prevx - 1, $prevy], [$prevx, $prevy - 1],
+			}
+		};
+		for my $try (@try){
+			my ($x, $y) = @{$try};
+		#%	print "[$x $y]\n";
+			$mem[$x][$y] and next;
+		#%	print "[$area[$x][$y] ne $lett]\n";
+			$area[$x][$y] ne $lett =~ y/*//dr and next;
+			$mem[$x][$y] = $lett =~ s/.$/lc $&/er =~ s/\*(.)/uc $1/er;
+			push @xy_stack, [$x, $y];
+			($prevx, $prevy) = ($x, $y);
+			$debug2 and print 0 + @xy_stack, "\n";
+			$debug2 and pretty_print(\@mem, \@xy_stack);
+			$debug3 and do {
+				usleep(200_000);
+				print "\033[2J";    #clear the screen
+				print "\033[0;0H"; #jump to 0,0	
+				print 0 + @xy_stack, "\n";
+				pretty_print(\@mem, \@xy_stack);
+			};
+		#%	print "<@{$_}>\n" for @mem;
+			if( @xy_stack > $area - 0){
+				@solution = map { [ @{$_} ] } @mem;
+				@solution_stack = map { [ @{$_} ] } @xy_stack;
+				$solved = 1;
+			}
+			return if $solved;
+			go();
+			return if $solved;
+			$mem[$x][$y] = 0;
+			pop @xy_stack;
+			($prevx, $prevy) = @{ $xy_stack[-1] };
+		}
+		unshift @seq, $lett;
+	}
+	
+	$debug and print "<@{$_}>\n" for @solution;
+	$debug and print "[@{$_}]" for @solution_stack;
+	$debug and print "\n";
+	
+	print $solved ? "SOLVED\n" : "NO SOLUTION\n";
+	pretty_print(\@solution, \@solution_stack);
+
+	sub pretty_print {
+		my( $ref_to_array, $ref_to_stack ) = (shift, shift);
+		my @array = map { [ @{$_} ] } @{$ref_to_array};
+		my @stack = map { [ @{$_} ] } @{$ref_to_stack};
+	
+		@array = map { (
+					[ ('+', '-') x ($cols + 2) ],
+					[ map { ('|', $_ || ' ') } @{$_} ]
+				) } @array;
+		for my $i (0 .. @stack - 2){
+			my( $x0, $y0 ) = @{ $stack[$i] };
+			my( $x1, $y1 ) = @{ $stack[$i+1] };
+		##%	print "[$array[$x1 * 2][$y1 * 2]]\n";
+			$array[$x1 * 2 + 1][$y1 * 2 + 1] =~ /[A-Z]/ and next;
+			if( $x1 - $x0 == 1 and $y1 - $y0 == 0){
+				$array[($x0 + 1) * 2][$y0 * 2 + 1] = ' ';
+			}
+			if( $x1 - $x0 == 0 and $y1 - $y0 == 1){
+				$array[$x0 * 2 + 1][($y0 + 1) * 2] = ' ';
+			}
+			if( $x0 - $x1 == 1 and $y1 - $y0 == 0){
+				$array[($x1 + 1) * 2][$y0 * 2 + 1] = ' ';
+			}
+			if( $x1 - $x0 == 0 and $y0 - $y1 == 1){
+				$array[$x0 * 2 + 1][($y1 + 1) * 2] = ' ';
+			}
+		}
+		splice @array, 0, 2;
+		pop @array;
+		map { splice @{$_}, 0, 2; pop @{$_} } @array;
+		print do { local $" = '', "@{$_}\n" } for @array;
+	}
+}
+
+
+SOLVED
++-+-+-+-+-+-+
+|L|o u d n|S|
++ +-+-+-+ + +
+|i e t|a|a|l|
++-+-+ + + + +
+|s|V|u|l|V|e|
++ + + + +-+ +
+|i|a|v|o U|n|
++ + + +-+-+ +
+|t l|a|s a g|
++-+-+-+-+-+-+
+SOLVED
++-+-+-+-+
+|M|j i n|
++ + +-+ +
+|e|a|s|i|
++ +-+ + +
+|r k y|M|
++-+-+-+-+
+SOLVED
++-+-+-+-+-+-+-+
+|a n|R u z a v|
++-+ +-+-+-+-+ +
+|M|o|a R|i n|a|
++ + + +-+ + +-+
+|e|d u|s n|e|M|
++ +-+-+ +-+-+ +
+|l|a|V y|i n|o|
++ + +-+-+ + + +
+|s v|l e t|e|r|
++-+-+ +-+-+-+ +
+|V i o|e n i k|
++-+-+-+-+-+-+-+
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+
+my $debug = 0;
+
+my @ARGV_2;
+my @opt;
+
+for (@ARGV){
+	/^-\S/ ? (push @opt, $_) : (push @ARGV_2, $_);
+}
+
+my $split = "";
+
+for (@opt){
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-d/ and $debug = 1;
+}
+
+@ARGV = @ARGV_2;
+
+for (@ARGV){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
+    
+	my ($rows, $cols) = split ' ', $data[ 0 ];
+	my $area = $rows * $cols;
+	
+	$debug and print "Area: $area ($rows x $cols)\n";
+	my $ok = 1;
+	my $eq = 0;
+	$ok = 0, print "Wide of matrix != number of columns!\n" if 
+		$rows != ($eq = grep { $_ == $cols } map { length $data[ $_ ] =~ s/\n//r } 1 .. $rows);
+	$debug and print "Rows: $rows, Eq: $eq\n";
+
+	my $n = $data[ $rows + 1 ];
+	my $cnt_let = 0 + eval join '+', map { length $data[$rows + 1 + $_] =~ s/\n//r } 1 .. $n;
+	$ok = 0, print "Area of letter matrix != num of all letters in all words!\n" if
+		$area != $cnt_let;
+	$debug and print "All letters in all words: $cnt_let\n";
+
+	print $ok ? "Data is OK.\n" : "Data is WRONG.\n";
+}

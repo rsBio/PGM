@@ -1,0 +1,1 @@
+./program.pl -options string_or_text_file files_with_lists_of_searching_strings
