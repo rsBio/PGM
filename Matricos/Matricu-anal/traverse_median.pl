@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-my $debug = 1;
+my $debug = 0;
 
 my @FILES;
 my @opt;
