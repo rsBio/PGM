@@ -1,1 +1,0 @@
-../inputs/cr-4x3.ssv

@@ -1,1 +1,0 @@
-../inputs/black-1x1.ssv

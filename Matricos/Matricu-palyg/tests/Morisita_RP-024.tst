@@ -1,1 +1,0 @@
-../inputs/pops-8x1-00001111.ssv

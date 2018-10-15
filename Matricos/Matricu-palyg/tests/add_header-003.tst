@@ -1,1 +1,0 @@
-../inputs/mini-01.ssv
