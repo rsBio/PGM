@@ -5,32 +5,46 @@ use strict;
 
 my $debug = 0;
 
-my @ARGV_2;
+my @FILES;
 my @opt;
 
 for (@ARGV){
-	/^-/ ? (push @opt, $_) : (push @ARGV_2, $_);
+	/^-/ ? (push @opt, $_) : (push @FILES, $_);
 }
 
-my $minl = 2;
+my $split = " ";
+my $join = " ";
+my $min_length = 2;
 my $printf = '%f';
 my $rr = 0;
+my $pbm = 0;
+my $to_pbm = 0;
+my $to_pgm = 0;
 my $hist = 0;
 my $visual = 0;
 my $longest = 0;
 my $avg = 0; # average
 my $ratio = 0;
-my $entr = 0;
+my $entropy = 0;
 
 for (@opt){
-	/-minl(\d+)/ and do {
-		$minl = $1;
+	/-pbm/ and do {
+		$pbm = 1;
+	};
+	/-topbm/ and do {
+		$to_pbm = 1;
+	};
+	/-topgm/ and do {
+		$to_pgm = 1;
+	};
+	/-rr/ and do {	# only to show recurrence rate
+		$rr = 1;
+	};
+	/-minl.*(\d+)/ and do {
+		$min_length = $1;
 	};
 	/-f(\S+)/ and do {
 		$printf = "%$1";
-	};
-	/-rr/ and do {	# only show recurrence rate
-		$rr = 1;
 	};
 	/-hist(v)?/ and do {
 		$hist = 1;
@@ -39,33 +53,79 @@ for (@opt){
 	/-longest/ and do {
 		$longest = 1;
 	};
-	/-avg/ and do {
+	/-avg|-average/ and do {
 		$avg = 1;
 	};
 	/-ratio/ and do {
 		$ratio = 1;
 	};
-	/-entr/ and do {
-		$entr = 1;
+	/-entropy/ and do {
+		$entropy = 1;
 	};
-	/-d/ and $debug = 1;
+	/-tsv/ and do {
+		$split = "\t";
+	};
+	/-csv/ and do {
+		$split = ',';
+	};
+	/-cssv/ and do {
+		$split = ', ';
+	};
+	/-ssv/ and do {
+		$split = ' ';
+	};
+	/-nosep/ and do {
+		$split = '';
+	};
+	/-totsv/ and do {
+		$join = "\t";
+	};
+	/-tocsv/ and do {
+		$join = ',';
+	};
+	/-tocssv/ and do {
+		$join = ', ';
+	};
+	/-tossv/ and do {
+		$join = ' ';
+	};
+	/-tonosep/ and do {
+		$join = '';
+	};
+	/-d$/ and $debug = 1;
 }
 
-@ARGV = @ARGV_2;
-
-for (@ARGV){
-	open my $in, '<', $_ or die "$0: [$_] ... : $!\n";
-	my $format = <$in>;
-	$format =~ /P1/ or die "Not P1\n";
-	my @rsl = split ' ', <$in>;
-	my $rsl = $rsl[0] * $rsl[1];
-	my $data = do { local $/ ; <$in> };
-	$data =~ s/ //g;
-	my $black = () = $data =~ /1/g;
-
+for (@FILES){
+	my $in;
+	/^-$/ or open $in, '<', $_ or die "$0: [$_] ... : $!\n";
+	my @data = grep m/./, (defined $in ? <$in> : <STDIN>);
+	chomp @data;
+	
+	my( $rows, $cols );
+	if( $pbm ){
+		shift @data;
+		( $rows, $cols ) = reverse split ' ', shift @data;
+	}
+	else{
+		( $rows, $cols ) = ( 0 + @data, 0 + split /$split/, $data[0] );
+	}
+	
+	my $size = $rows * $cols;
+	
+	@data = map { [ split /$split/ ] } @data;
+	
+	$debug and print "@{$_}\n" for @data;
+	$debug and print "---\n";
+	
+	my $data = join "\n", map { join '', @{ $_ } } @data;
+	
+	my $cnt_1 = () = $data =~ /1/g;
+	
+	$rr and do { printf "${printf}\n", $cnt_1 / $size ; next };
+	
 	# ***** skew and rotate-cw begin *****
-	my $skewed = $data =~ s/\n+\z//r =~ s/\n/ '*' x ($rsl[1]) /ger;
-	my $wide = $rsl[0] + $rsl[1] - 1;
+	my $skewed = $data =~ s/\n/ '*' x $cols /ger;
+	my $wide = $rows + $cols - 1;
 	if( $debug ){
 		print "Wide: $wide\n";
 		print $skewed =~ s/.{$wide}\K/\n/gr;
@@ -73,7 +133,7 @@ for (@ARGV){
 	
 	my $i = 0;
 	my @rotcw = ('') x $wide;
-	while( length( my $chop = chop $skewed) ){
+	while( length( my $chop = chop $skewed ) ){
 		$rotcw[ $wide - $i ++ % $wide - 1 ] .= $chop;
 	}
 	$debug and print "i: $i\n";
@@ -82,20 +142,63 @@ for (@ARGV){
 
 	$data = join "\n", @rotcw;
 	
-	$rr and do { printf "${printf}\n", $black / $rsl ; next };
-
+	if( $to_pbm or $to_pgm ){
+		$data =~ s/1{$min_length,}/ 'y' x length $& /ge;
+		
+		$debug and print "Marked:\n";
+		$debug and print "$data\n";
+		
+		my $i = 0;
+		my @rotccw = ('') x $rows;
+		while( length( my $chop = chop $data ) ){
+			next if $chop eq "\n";
+			$rotccw[ $rows - $i ++ % $rows- 1 ] =~ s/$/$chop/;
+		}
+		$debug and print "Rotated ccw:\n";
+		$debug and print "$_\n" for @rotccw;
+		
+		$data = join "\n", @rotccw;
+		
+		$data =~ s/\*//g;
+		
+		$debug and print "Aligned:\n$data\n";
+	}
+	
+	if( $to_pbm ){
+		print "P1\n";
+		print $cols, ' ', $rows, "\n"; 
+		
+		$data =~ y/1y/01/;
+		
+		print map "$_\n", map { join $join, split // } $_ for split "\n", $data;
+		
+		next;
+	}
+	
+	if( $to_pgm ){		
+		print "P2\n";
+		print $cols, ' ', $rows, "\n";
+		print 4, "\n";
+		
+		$data =~ y/01y/430/;
+		
+		print map "$_\n", map { join $join, split // } $_ for split "\n", $data;
+		
+		next;
+	}
+	
 	my %lengths;
 	my $sum = 0;
 	my @lines;
-	map { my $len = length(); $sum += $len; $lengths{ $len } ++ } 
-		@lines = $data =~ /1{$minl,}/g;
+	map { my $len = length; $sum += $len; $lengths{ $len } ++ } 
+		@lines = $data =~ /1{$min_length,}/g;
 	
-	my $determinism = $sum / $black;
+	my $determinism = $sum / $cnt_1;
 	printf "${printf}\n", $determinism;
 	
 	if( $longest ){
-		my $maxl = (sort {$b <=> $a} keys %lengths)[ 0 ] || 0;
-		print "Longest: $maxl\n";
+		my $max_length = ( sort { $b <=> $a } keys %lengths )[ 0 ] || 0;
+		print "Longest: $max_length\n";
 	}
 	
 	if( $avg ){
@@ -103,17 +206,17 @@ for (@ARGV){
 	}
 
 	if( $ratio ){
-		printf "Ratio: ${printf}\n", $determinism * $rsl / $black;
+		printf "Ratio: ${printf}\n", $determinism * $size / $cnt_1;
 	}
-	if( $entr ){
+	if( $entropy ){
 		printf "Entrophy: ${printf}\n",  0 - eval join ' + ', 
 			map { $lengths{ $_ } * log $lengths{ $_ } } keys %lengths;
 	}
 	
 	if( $hist ){
-		my $maxl = (sort {$b <=> $a} keys %lengths)[ 0 ] || 0;
-		printf "%3d : %s\n", $_, map { $visual ? '*' x $_ : (sprintf "%3d", $_) } 
+		my $max_length = ( sort {$b <=> $a} keys %lengths )[ 0 ] || 0;
+		printf "%3d : %s\n", $_, map { $visual ? '*' x $_ : ( sprintf "%3d", $_ ) } 
 			exists $lengths{ $_ } ? $lengths{ $_ } : 0 
-			for $minl .. $maxl;
+			for $min_length .. $max_length;
 	}
 }
