@@ -40,7 +40,7 @@ for (@ARGV){
 	
 	@_ = $data =~ /
 		Aukos(?:\t\d+)+\n
-		Informacija
+		(?:Belaisviai|Informacija)
 		.*?
 		(?=Grobis)
 	/sgx;
@@ -62,7 +62,9 @@ for (@ARGV){
 	
 	$data =~ /Tema: .*? Lojalumas/sx;
 	$data = $&;
-	$data =~ s/Aukos .*? (?=Grobis)/@_/sgx;
-	
+	$data =~ s/Aukos .*? (?=Grobis|Besiginantis)/join "\t+\n", @_/sex;
+    $data =~ s/Buvo pasirinktas atsitiktinis taikinys\./($&)/g;
+	$data =~ s/(\b.{3,50}) \b\1/$1/sg;
+
 	print $data, "\n";
 }
