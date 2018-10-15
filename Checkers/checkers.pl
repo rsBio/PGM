@@ -17,6 +17,7 @@ use strict;
 	my $empty = '.';
 	my $white_square = "▒";
 	my $print_possible_moves = 0;
+	my $print_board_only = 0;
 	my $show_possible_moves = 0;
 	my $print_number_of_possible_moves = 0;
 	my $print_axes = 0;
@@ -33,6 +34,9 @@ use strict;
 		};
 		/-p(rint)?moves/i and do {
 			$print_possible_moves = 1;
+		};
+		/-p(rint)?board/i and do {
+			$print_board_only = 1;
 		};
 		/-showmoves/i and do {
 			$show_possible_moves = 1;
@@ -53,7 +57,12 @@ use strict;
 		}
 	
 	init_board( \@Board, \$whose_move, $string );
-		
+	
+	if( $print_board_only ){
+		print_board( \@Board, $whose_move );
+		exit;
+		}
+	
 	my $game_over = 0;
 	
 	while( ! $game_over ){
@@ -464,7 +473,11 @@ use strict;
 								
 								if( $ref_Board->[ $ii ][ $jj ] eq '.' ){
 									if( $jumped == 0 ){
-										push @moves, [ $man_king, [ "$ii $jj", @{ $try->[ 1 ] } ], [], [] ];
+										my $man_king_there = $man_king;
+										if( $whose_move eq 'W' and $ii == 8 - 1 or $whose_move eq 'B' and $ii == 0 ){
+											$man_king_there = 1;
+											}
+										push @moves, [ $man_king_there, [ "$ii $jj", @{ $try->[ 1 ] } ], [], [] ];
 										}
 									else{
 										last;
