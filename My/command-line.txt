@@ -13,3 +13,6 @@ cat -A
 Examples:
 
 ls | grep sine | grep pops | xargs ./is_matrix.pl
+
+convert -delay 50 -loop 0 gif*.pgm m04_med_pgm.gif
+
