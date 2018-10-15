@@ -101,8 +101,9 @@ if( @FILES != 2 ){
 	
 	for my $file (0 .. 1){
 		for my $i (1 .. $cols[$file]){
-			my $sum;
+			my $sum = 0;
 			for my $j (1 .. $rows){
+				( $Xi[$file][ $i-1 ] * ( $Xi[$file][ $i-1 ] - $Simpson ) ) or next;
 				$sum += ( $data[$file][ $j-1 ][ $i-1 ] * 
 						( $data[$file][ $j-1 ][ $i-1 ] - $Simpson ) ) /
 					( $Xi[$file][ $i-1 ] * ( $Xi[$file][ $i-1 ] - $Simpson ) );
@@ -125,9 +126,13 @@ if( @FILES != 2 ){
 				$debug and print 
 					"[$i:$data[0][$r][ $i-1 ] * $j:$data[1][$r][ $j-1 ]]\n";
 		    }
-		    push @line, 2 * $sum / 
-		        ( ($lambda_i[0][ $i-1 ] + $lambda_i[1][ $j-1 ]) 
-					* $Xi[0][ $i-1 ] * $Xi[1][ $j-1 ] );
+		    push @line, 
+				$Xi[0][ $i-1 ] == 0 || $Xi[1][ $j-1 ] == 0 ?
+					0
+				:
+					2 * $sum / 
+					( ($lambda_i[0][ $i-1 ] + $lambda_i[1][ $j-1 ]) 
+						* $Xi[0][ $i-1 ] * $Xi[1][ $j-1 ] );
 		}
 		push @matrix, [ @line ];
 	}
