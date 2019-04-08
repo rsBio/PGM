@@ -40,12 +40,46 @@ for (@opt){
 	};
 }
 
-sub is_in_array__primitive {
-	$find //= shift;
-	my $found;
+sub binary_tree {
+	my @A = @_;
+	my %tree;
 	
-#	$find == $_ and ++ $found for @_;
-	$found = grep $_ == $find, @_;
+	for my $number ( @A ){
+		my $ref = \%tree;
+		
+		while( exists $ref->{ 'value' } ){
+			$ref = $number < $ref->{ 'value' } ?
+					\%{ $ref->{ 'left' } }
+				:
+					\%{ $ref->{ 'right' } }
+			}
+		
+		$ref->{ 'value' } = $number;
+		}
+	
+	$debug and print "=" x 20, $/;
+	$debug and print "@A\n";
+	$debug and print Dumper( \%tree );
+	$debug and print "$_ ==> $tree{ $_ }\n" for keys %tree;
+	return %tree;
+	}
+
+sub is_in_array__binary_tree {
+	$find //= shift;
+	my %tree = binary_tree( @_ );
+	my $found = 0;
+	my $ref = \%tree;
+	
+	while( my $cmp = $find <=> $ref->{ 'value' } || $found ++ ){
+		my $direction = $cmp == -1 ? "left" : "right";
+		
+		if( exists $ref->{ $direction } ){
+			$ref = \%{ $ref->{ $direction } };
+			}
+		else{
+			last;
+			}
+		}
 	
 	return $found ? "TRUE" : "FALSE";
 	}
@@ -56,5 +90,5 @@ for (@FILES){
 	my @data = map { chomp; [ split $split ] } 
 		grep m/./, (defined $in ? <$in> : <STDIN>);
 	
-	print map "$_\n", join ' ', is_in_array__primitive( @{$_} ) for @data;
+	print map "$_\n", join ' ', is_in_array__binary_tree( @{$_} ) for @data;
 }

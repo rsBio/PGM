@@ -15,14 +15,10 @@ for (@ARGV){
 
 my $split = " ";
 my $find;
-my $last = 0;
 
 for (@opt){
 	/-find(\d+)/ and do {
 		$find = $1;
-	};
-	/-last/ and do {
-		$last = 1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -44,17 +40,12 @@ for (@opt){
 	};
 }
 
-sub is_in_array__primitive {
+sub is_in_array__grep {
 	$find //= shift;
 	my $found;
 	
 #	$find == $_ and ++ $found for @_;
-	for( @_ ){
-		$_ == $find and do {
-			$found = 1;
-			last if $last;
-			};
-		}
+	$found = grep $_ == $find, @_;
 	
 	return $found ? "TRUE" : "FALSE";
 	}
@@ -65,5 +56,5 @@ for (@FILES){
 	my @data = map { chomp; [ split $split ] } 
 		grep m/./, (defined $in ? <$in> : <STDIN>);
 	
-	print map "$_\n", join ' ', is_in_array__primitive( @{$_} ) for @data;
+	print map "$_\n", join ' ', is_in_array__grep( @{$_} ) for @data;
 }
