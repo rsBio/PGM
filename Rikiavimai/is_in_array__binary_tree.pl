@@ -15,10 +15,14 @@ for (@ARGV){
 
 my $split = " ";
 my $find;
+my $last = 0;
 
 for (@opt){
 	/-find(\d+)/ and do {
 		$find = $1;
+	};
+	/-last/ and do {
+		$last = 1;
 	};
 	/-tsv/ and do {
 		$split = "\t";
@@ -71,6 +75,8 @@ sub is_in_array__binary_tree {
 	my $ref = \%tree;
 	
 	while( my $cmp = $find <=> $ref->{ 'value' } || $found ++ ){
+		last if $last and $found;
+		
 		my $direction = $cmp == -1 ? "left" : "right";
 		
 		if( exists $ref->{ $direction } ){
