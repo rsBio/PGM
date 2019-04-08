@@ -16,3 +16,6 @@ ls | grep sine | grep pops | xargs ./is_matrix.pl
 
 convert -delay 50 -loop 0 gif*.pgm m04_med_pgm.gif
 
+convert -define jpeg:extent=500kb A.jpg B.jpg
+
+pdftk A.pdf cat 1-1 73-74 output A__pages_1,72-73.pdf
