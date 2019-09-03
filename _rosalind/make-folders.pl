@@ -43,6 +43,8 @@ while( @lines ){
 	open my $fh_title, '>',		"${title}.txt" or die "$0:Can't create:$!\n";
 	open my $fh_status, '>',	'status.txt' or die "$0:Can't create:$!\n";
 	open my $fh_status_2, '>',	'status_2.txt' or die "$0:Can't create:$!\n";
+	open my $fh_input, '>',		'sample.in' or die "$0:Can't create:$!\n";
+	open my $fh_output, '>',	'sample.out' or die "$0:Can't create:$!\n";
 	open my $fh_code, '>',		"${acronym}.pl" or die "$0:Can't create:$!\n";
 	
 	print $fh_status $status{ $is_solved };
