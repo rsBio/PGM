@@ -15,20 +15,21 @@ s/.*// for @DNAs;
 s/\s//g for @DNAs;
 
 my @substrings;
+my %substrings;
 
 $DNAs[ 0 ] =~ /	
 	.+
 	(?{
-		push @substrings, $&;
+		$substrings{ $& } = 1;
 		})
 	(*F)
 	/x;
 
-$debug and print for @substrings;
+$debug and print for sort keys %substrings;
 
 my @common;
 
-for my $substring ( @substrings ){
+for my $substring ( keys %substrings ){
 	my $is_common = 1;
 	for my $DNA ( @DNAs ){
 		$is_common &&= $DNA =~ /$substring/ or last;
