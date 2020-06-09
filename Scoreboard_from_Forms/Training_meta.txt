@@ -1,0 +1,9 @@
+5/7/2020
+21
+1
+BFCA,BZAZ,BDFC,FZEA,EZAC
+1
+add.csv
+30,60
+0 .. 2, 0, 3, 24
+4 .. 23
