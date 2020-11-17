@@ -1,25 +1,27 @@
-jpegtopnm 20200412_161830.jpg > A_raw.ppm ;
+jpegtopnm 20200412_162534.jpg > A_raw.ppm ;
 pnmnoraw A_raw.ppm > A_plain.ppm ;
 ~/Matricos/Recurrence-plot/to_matrix-plain-pnm.pl A_plain.ppm > A.mppm ; # Memory >1 GB
 
 # 13 meters = 56 px = 30 cm.
 
-
-
 ####
 
 png --> whiten_far_areas + zealous_crop_up_down --> mppm
 
-perl -le ' print " pngtopnm 1kp/${_}.png > 1kp/${_}raw.ppm ;\n pnmnoraw 1kp/${_}raw.ppm > 1kp/${_}plain.ppm ;\n ~/Matricos/Recurrence-plot/to_matrix-plain-pnm.pl 1kp/${_}plain.ppm > 1kp/${_}.mppm ;\n rm 1kp/${_}raw.ppm ;\n rm 1kp/${_}plain.ppm ;\n ./whiten_far_areas.pl -zcrop-UD -dist200 1kp/${_}.mppm > 1kp/${_}c.mppm ;\n rm 1kp/${_}.mppm ;\n\n " for 1 .. 4 ';
+perl -le ' my $kp = 6; print " pngtopnm ${kp}kp/${_}.png > ${kp}kp/${_}raw.ppm ;\n pnmnoraw ${kp}kp/${_}raw.ppm > ${kp}kp/${_}plain.ppm ;\n ~/Matricos/Recurrence-plot/to_matrix-plain-pnm.pl ${kp}kp/${_}plain.ppm > ${kp}kp/${_}.mppm ;\n rm ${kp}kp/${_}raw.ppm ;\n rm ${kp}kp/${_}plain.ppm ;\n ./whiten_far_areas.pl -zcrop-UD -dist300 ${kp}kp/${_}.mppm > ${kp}kp/${_}c.mppm ;\n rm ${kp}kp/${_}.mppm ;\n\n " for 1 .. 4 ';
 
 ####
 
-enlarge minimap 2x, paste minimap on B.ppm, --> jpeg
+enlarge minimap 2x, paste minimap on B.mppm, --> jpeg
 
-perl -le ' print " pnmenlarge 2 1kp/${_}c.mppm > 1kp/${_}cx2raw.ppm ;\n pnmnoraw 1kp/${_}cx2raw.ppm > 1kp/${_}cx2plain.ppm ;\n ~/Matricos/Recurrence-plot/to_matrix-plain-pnm.pl 1kp/${_}cx2plain.ppm > 1kp/${_}cx2.mppm ;\n ./paste_minimaps.pl -minimap=1kp/${_}cx2.mppm B.ppm > D${_}.mppm ;\n rm 1kp/${_}cx2raw.ppm ;\n rm 1kp/${_}cx2plain.ppm ;\n pnmtojpeg D${_}.mppm > D${_}.jpg ;\n " for 1 .. 4 ';
+perl -le ' my $kp = 6; print " pnmenlarge 2 ${kp}kp/${_}c.mppm > ${kp}kp/${_}cx2raw.ppm ;\n pnmnoraw ${kp}kp/${_}cx2raw.ppm > ${kp}kp/${_}cx2plain.ppm ;\n ~/Matricos/Recurrence-plot/to_matrix-plain-pnm.pl ${kp}kp/${_}cx2plain.ppm > ${kp}kp/${_}cx2.mppm ;\n ./paste_minimaps.pl -minimap=${kp}kp/${_}cx2.mppm B.mppm > D${_}.mppm ;\n rm ${kp}kp/${_}cx2raw.ppm ;\n rm ${kp}kp/${_}cx2plain.ppm ;\n pnmtojpeg D${_}.mppm > D${_}.jpg ;\n " for 1 .. 4 ';
 
 
 ####
 
+for flags:
+./paste_flags.pl -coords-file=coords.txt A.mppm > B.mppm
+
+for solutions:
 ./paste_flags.pl -sol -coords-file=coords.txt -symbols-pbm=../Paste_symbols/D.pbm A.mppm > C.mppm
 
