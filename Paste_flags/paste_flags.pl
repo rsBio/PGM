@@ -112,6 +112,8 @@ for( @FILES ){
 sub paste_flag{
 	my( $col, $row, $distance, $letter, $nr, $place ) = @_;
 	
+	return if not $solutions and $letter eq 'Z';
+	
 	my $px_width = int( 56 * 13 / $distance );
 
 	my $leg_height = 2;
@@ -167,7 +169,8 @@ sub paste_flag{
 	for my $i ( $start_row + $px_width .. $start_row + $px_width * ( 1 + $leg_height ) - 1 ){
 		for my $j ( $start_col_leg .. $start_col_leg + $leg_width - 1 ){
 			if( $solutions or $letter ne 'Z' ){
-			$enveloped[ $i ][ $j ] = [ 255, 255, 255 ];
+				$enveloped[ $i ][ $j ] = [ 255, 255, 255 ];
+				}
 			}
 		}
 	
@@ -175,51 +178,54 @@ sub paste_flag{
 	
 	# BEGIN info:
 	
-	if( $place eq 'u' ){
-		$start_row = $start_row -= 100;
-		}
-	else{
-		$start_row = $row + 30;
-		}
-	
-	if( $nr == 0 ){
-		$start_col = $col - 18;
-		}
-	else{
-		$start_col = $col - 0;
-		}
-	
-	open my $in_symbols_pbm, '<', $symbols_pbm or die "$0: [$symbols_pbm] Can't open file : $!\n";
-	
-	my @data = <$in_symbols_pbm>;
-	shift @data;
-	my( $cols, $rows ) = split ' ', shift @data;
-	
-	my $char_height = $rows / 96;
-	my $char_width = $cols;
-	
-	my %char_hash;
-	
-	for my $char ( map chr, 0x20 .. 0x7F - 1 ){
-		for my $i ( 0 .. $char_height - 1 ){
-			@{ $char_hash{ $char }[ $i ] } = split ' ', shift @data;
+	if( $solutions ){
+		
+		if( $place eq 'u' ){
+			$start_row = $start_row -= 100;
+			}
+		else{
+			$start_row = $row + 30;
+			}
+		
+		if( $nr == 0 ){
+			$start_col = $col - 18;
+			}
+		else{
+			$start_col = $col - 0;
+			}
+		
+		open my $in_symbols_pbm, '<', $symbols_pbm or die "$0: [$symbols_pbm] Can't open file : $!\n";
+		
+		my @data = <$in_symbols_pbm>;
+		shift @data;
+		my( $cols, $rows ) = split ' ', shift @data;
+		
+		my $char_height = $rows / 96;
+		my $char_width = $cols;
+		
+		my %char_hash;
+		
+		for my $char ( map chr, 0x20 .. 0x7F - 1 ){
+			for my $i ( 0 .. $char_height - 1 ){
+				@{ $char_hash{ $char }[ $i ] } = split ' ', shift @data;
+				}
+			}
+		
+		for my $i ( $start_row .. $start_row + $char_height - 1 ){
+			for my $j ( $start_col .. $start_col + $char_width - 1 ){
+				$enveloped[ $i ][ $j ] = [ ( 255 * ( 1 - $char_hash{ $letter }[ $i - $start_row ][ $j - $start_col ] ) ) x 3 ];
+				}
+			}
+		
+		for my $i ( $start_row .. $start_row + $char_height - 1 ){
+			last if $nr == 0;
+			$start_col = $col - 36;
+			for my $j ( $start_col .. $start_col + $char_width - 1 ){
+				$enveloped[ $i ][ $j ] = [ ( 255 * ( 1 - $char_hash{ $nr }[ $i - $start_row ][ $j - $start_col ] ) ) x 3 ];
+				}
 			}
 		}
-	
-	for my $i ( $start_row .. $start_row + $char_height - 1 ){
-		for my $j ( $start_col .. $start_col + $char_width - 1 ){
-			$enveloped[ $i ][ $j ] = [ ( 255 * ( 1 - $char_hash{ $letter }[ $i - $start_row ][ $j - $start_col ] ) ) x 3 ];
-			}
-		}
-	
-	for my $i ( $start_row .. $start_row + $char_height - 1 ){
-		last if $nr == 0;
-		$start_col = $col - 36;
-		for my $j ( $start_col .. $start_col + $char_width - 1 ){
-			$enveloped[ $i ][ $j ] = [ ( 255 * ( 1 - $char_hash{ $nr }[ $i - $start_row ][ $j - $start_col ] ) ) x 3 ];
-			}
-		}
-	
+		
 	# END info;
 	
 	}
