@@ -15,7 +15,7 @@ for( @ARGV ){
 my $split = " ";
 my $join = " ";
 my $distance_px = 100;
-my $zealous_crop = 0;
+my $zealous_crop_up_down = 0;
 
 for( @opt ){
 	/-dist(?:ance-px)?(\d+)/ and do {
