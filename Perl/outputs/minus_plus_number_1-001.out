@@ -1,0 +1,5 @@
+Argument "-+3" isn't numeric in addition (+) at ./minus_plus_number_1.pl line 13.
+Argument " -+3" isn't numeric in addition (+) at ./minus_plus_number_1.pl line 13.
+Argument "- +3" isn't numeric in addition (+) at ./minus_plus_number_1.pl line 13.
+Argument "-+ 3" isn't numeric in addition (+) at ./minus_plus_number_1.pl line 13.
+[-2][-2][-2][1]

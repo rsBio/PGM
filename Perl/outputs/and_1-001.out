@@ -1,0 +1,13 @@
+Argument "" isn't numeric in addition (+) at ./and_1.pl line 12.
+Use of uninitialized value $i in concatenation (.) or string at ./and_1.pl line 11.
+Use of uninitialized value $i in concatenation (.) or string at ./and_1.pl line 12.
+Use of uninitialized value $i in addition (+) at ./and_1.pl line 12.
+Use of uninitialized value $_ in concatenation (.) or string at ./and_1.pl line 12.
+i:[0]
+[0][a0][0]
+i:[]
+[][a][0]
+i:[]
+[][a][0]
+i:[]
+[][a][0]

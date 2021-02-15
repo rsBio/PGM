@@ -1,0 +1,13 @@
+Argument "" isn't numeric in addition (+) at ./elsif_1.pl line 15.
+Use of uninitialized value $i in concatenation (.) or string at ./elsif_1.pl line 11.
+Use of uninitialized value in concatenation (.) or string at ./elsif_1.pl line 15.
+Use of uninitialized value in addition (+) at ./elsif_1.pl line 15.
+Use of uninitialized value $_ in concatenation (.) or string at ./elsif_1.pl line 15.
+i:[0]
+[0][a0][0]
+i:[]
+[][a][0]
+i:[]
+[][a][0]
+i:[]
+[][a][0]

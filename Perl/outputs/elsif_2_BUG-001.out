@@ -1,0 +1,6 @@
+Use of uninitialized value in concatenation (.) or string at ./elsif_2_BUG.pl line 8.
+Argument "5a" isn't numeric in addition (+) at ./elsif_2_BUG.pl line 9.
+Use of uninitialized value in addition (+) at ./elsif_2_BUG.pl line 9.
+
+
+50a

@@ -1,0 +1,30 @@
+Use of uninitialized value in addition (+) at ./elsif_3_BUG.pl line 8.
+Argument "5a" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 10.
+Argument "11b" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 12.
+Argument "19c" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 14.
+Argument "30d" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 16.
+Argument "45e" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 18.
+Use of uninitialized value in addition (+) at ./elsif_3_BUG.pl line 20.
+Use of uninitialized value in concatenation (.) or string at ./elsif_3_BUG.pl line 22.
+Argument "65f" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 24.
+Argument "106i" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 26.
+Argument "60156jk" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 30.
+Argument "60227l" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 34.
+Use of uninitialized value in addition (+) at ./elsif_3_BUG.pl line 36.
+Argument "60323n" isn't numeric in addition (+) at ./elsif_3_BUG.pl line 38.
+
+
+
+
+
+
+26g
+33h
+
+
+
+
+83m
+
+110n
+

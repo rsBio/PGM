@@ -1,0 +1,4 @@
+Argument "- 010" isn't numeric in addition (+) at ./negative_octal_1.pl line 16.
+[-8][-010][- 010]
+[-7][-9][-9]
+[-7][-9][-9]
