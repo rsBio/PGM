@@ -37,15 +37,3 @@ print 110 + do{ if( "" ){ "A" } elsif( ""  ){ "B" } elsif( () ){ "C" } } . "n";
 
 print 1000 + do{ if( "" ){ "A" } elsif( 0  ){ "B" } elsif( !1 ){ "C" } } . "o";
 
-exit;
-
-my @i = ( 0, '', !1, undef );
-
-for my $i ( @i ){
-	print "i:[$i]";
-	print join '', map "[$_]", 
-		do{ if( 0 ){ 5 } elsif( "" ){ 6 } }, 
-		'a' . do{ if( 0 ){ 5 } elsif( "" ){ 6 } }, 
-		0 + do{ if( 0 ){ 5 } elsif( "" ){ 6 } },
-		;
-	}
