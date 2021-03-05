@@ -1,0 +1,17 @@
+Useless use of a constant (5) in void context at ./while_until_1.pl line 13.
+Useless use of a constant (6) in void context at ./while_until_1.pl line 14.
+Useless use of a constant (7) in void context at ./while_until_1.pl line 18.
+Useless use of a constant (8) in void context at ./while_until_1.pl line 19.
+Useless use of a constant (9) in void context at ./while_until_1.pl line 20.
+Useless use of a constant (10) in void context at ./while_until_1.pl line 21.
+Useless use of a constant (20) in void context at ./while_until_1.pl line 28.
+Useless use of a constant (27) in void context at ./while_until_1.pl line 34.
+Useless use of a constant (28) in void context at ./while_until_1.pl line 35.
+Use of uninitialized value $_ in concatenation (.) or string at ./while_until_1.pl line 21.
+Use of uninitialized value $_ in concatenation (.) or string at ./while_until_1.pl line 28.
+while:
+[0][0]
+[0][][][]
+[0][][][]
+until:
+[B][2][B][2][B][2]

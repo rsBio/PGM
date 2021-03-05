@@ -1,0 +1,9 @@
+Useless use of logical xor in void context at ./xor_1.pl line 13.
+Useless use of logical xor in void context at ./xor_1.pl line 15.
+Useless use of logical xor in void context at ./xor_1.pl line 17.
+Useless use of logical xor in void context at ./xor_1.pl line 19.
+d+s+a
+empty line
+has "a"
+Found something
+1
